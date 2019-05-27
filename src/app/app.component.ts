@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'QingHaiGeoMS';
+  title = '青海遗迹旅游管理系统';
 }

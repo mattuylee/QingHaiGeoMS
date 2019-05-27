@@ -1,0 +1,60 @@
+<app-header [selectedItem]="'knowledge'"></app-header>
+<div *ngIf="errText" id="failed-alert" class="knowledge-failed-alert alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+    <h4>操作失败</h4>
+    <div>{{errText}}</div>
+</div>
+
+<div class="modal fade" id="deleting-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-danger">删除地质科普</h4>
+            </div>
+            <div class="modal-body">
+                <p>确定要删除该地质科普吗？</p>
+                <p>警告：该操作<strong>不可撤销</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="delete(knowledge)">删除</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngFor="let knowledge of knowledges" class="knowledge-container">
+  <div class="knowledge-title">
+    <a href="/manage/knowledge/{{knowledge.code}}" class="btn btn-link">
+      <h2>{{knowledge.name}}<small> [{{knowledge.code}}]</small></h2>
+    </a>
+    <button class="btn btn-danger right-float" data-toggle="modal" data-target="#deleting-modal">删除</button>
+    <button class="btn btn-warning right-float" (click)="freeze(knowledge)">{{knowledge?.isFreezed ? '解冻' : '冻结'}}</button>
+    <a class="btn btn-primary right-float" href="/manage/knowledge/{{knowledge.code}}">编辑</a>
+  </div>
+  <p>{{knowledge.description.slice(0, 200)}}......</p>
+</div>
+
+<nav aria-label="Page navigation" style="text-align: center;">
+  <ul class="pagination">
+    <li>
+      <button [disabled]="page <= 1 ? 'true' : undefined" (click)="loadKnowledges(page - 1)" class="btn btn-default"
+        aria-label="Previous">
+        <span aria-hidden="true">上一页</span>
+      </button>
+    </li>
+    <li *ngFor="let i of counter">
+      <button class="btn btn-default" (click)="loadKnowledges(i + 1)"
+        [disabled]="i == page-1 ? 'true' : undefined">{{i + 1}}</button>
+    </li>
+    <li>
+      <button [disabled]="page >= knowledges.length-1 ? 'true' : undefined" (click)="loadKnowledges(page + 1)"
+        class="btn btn-default" aria-label="Next">
+        <span aria-hidden="true">下一页</span>
+      </button>
+    </li>
+  </ul>
+</nav>
