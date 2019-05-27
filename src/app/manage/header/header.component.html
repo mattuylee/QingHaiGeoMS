@@ -1,0 +1,34 @@
+<div *ngIf="false" id='main'>
+  <span>
+    <nav>
+      <a routerLink="/map" id="aHome"><img src="../../assets/img/home.jpg"/></a>
+      <a routerLink="/map" class="aNormal" [ngClass]="{aFocus: currentPage == 'map'}" (click)="setCurrentPage('map')">遗迹点管理</a>
+      <a routerLink="/moment" class="aNormal" [ngClass]="{aFocus: currentPage == 'moment'}" (click)="setCurrentPage('moment')">随手拍管理</a>
+      <a routerLink="/user" class="aNormal" [ngClass]="{aFocus: currentPage == 'user'}" (click)="setCurrentPage('user')">用户管理</a>
+      <a routerLink="/qa" class="aNormal"[ngClass]="{aFocus: currentPage == 'qa'}" (click)="setCurrentPage('qa')">互动问答管理</a>
+    </nav>
+  </span>
+  <span id="login">
+    <img src="" alt="">
+    <button class="btn btn-success" (click)="NativeObject.Login()">登录</button>
+  </span>
+</div>
+
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/map"><span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+      </div>
+  
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li [ngClass]="{active: selectedItem == 'relic'}">
+            <a href="/manage/relic">遗迹 <span *ngIf="selectedItem == 'relic'" class="sr-only">(current)</span></a>
+          </li>
+          <li [ngClass]="{active: selectedItem == 'knowledge'}">
+            <a href="/manage/knowledge">地质科普 <span *ngIf="selectedItem == 'knowledge'" class="sr-only">(current)</span></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>

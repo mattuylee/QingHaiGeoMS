@@ -1,0 +1,86 @@
+<app-header [selectedItem]="'relic'"></app-header>
+<div *ngIf="!relic" id="failed-alert" class="alert alert-danger alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+    <h4>操作失败</h4>
+    <div>{{errText}}</div>
+</div>
+<div *ngIf="showSucceededAlert" id="failed-alert" class="alert alert-success alert-dismissible" role="alert">
+    <div>修改成功！</div>
+</div>
+
+<div class="title-container">
+    <h1>{{relic?.name}}</h1>
+</div>
+<div *ngIf="relic" id="relic-description" contenteditable="true">{{relic?.description}}</div>
+<div class="row-fluid">
+    <div class="col-sm-6 col-md-5 col-lg-6">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>编号</th>
+                    <th>{{relic?.code}}</th>
+                </tr>
+                <tr>
+                    <th>名称</th>
+                    <th><input id="relic-name" value="{{relic?.name}}" /></th>
+                </tr>
+                <tr>
+                    <th>位置</th>
+                    <th>
+                        <input type="number" id="relic-latitude" value="{{relic?.location.latitude.toFixed(3)}}"
+                            step="0.001" />
+                        °N,&nbsp;
+                        <input type="number" id="relic-longitude" value="{{relic?.location.longitude.toFixed(3)}}"
+                            step="0.001" />
+                        °E
+
+                    </th>
+                </tr>
+                <tr>
+                    <th>高程</th>
+                    <th>
+                        <input type="number" id="relic-altitude" value="{{relic?.location.altitude}}" />
+                        m
+                    </th>
+                </tr>
+                <tr>
+                    <th>遗迹类型</th>
+                    <th>
+                        <div class="dropdown">
+                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                {{changedRelicType.category}}&nbsp;
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li *ngFor="let i of relicTypes"><a (click)="changeRelicType(i)">{{i.category}}[{{i.code}}]</a></li>
+                            </ul>
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th>类型代码</th>
+                    <th><input id="relic-type-code" readonly="true" [value]="changedRelicType.code" /></th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm-3 col-md-3 col-lg-3" *ngIf="relic">
+        <div class="thumbnail">
+            <img [src]="mediaUrl + relic?.pictures[0] + '?mode=low'" alt="暂无图片">
+            <div class="caption">
+                <p><a href="/manage/media/{{relic.code}}?targetType=relic&mediaType=picture" class="btn btn-primary" role="button">管理图片</a></p>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3 col-md-3 col-lg-3" *ngIf="relic">
+        <div class="thumbnail">
+            <img [src]="mediaUrl + relic?.videos[0]?.poster + '?mode=low'" alt="暂无预览">
+            <div class="caption">
+                <p><a href="/manage/media/{{relic.code}}?targetType=video&mediaType=picture" class="btn btn-primary" role="button">管理视频</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<button class="btn btn-primary btn-lg btn-block" (click)="updateRelic()">保存</button>
