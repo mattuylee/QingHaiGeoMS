@@ -20,7 +20,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="delete(relic)">删除</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteRelic()">删除</button>
             </div>
         </div>
     </div>
@@ -28,12 +28,12 @@
 
 <div *ngFor="let relic of relics" class="relic-container">
   <div class="relic-title">
-    <a href="/manage/relic/{{relic.code}}" class="btn btn-link">
-      <h2 style=" display: inline;">{{relic.name}}<small> [{{relic.code}}]</small></h2>
+    <a routerLink="/manage/relic/{{relic.code}}" class="btn btn-link">
+      <h2>{{relic.name}}<small> [{{relic.code}}]</small></h2>
     </a>
-    <button class="btn btn-danger right-float" data-toggle="modal" data-target="#deleting-modal">删除</button>
-    <button class="btn btn-warning right-float" (click)="freeze(relic)">{{relic?.isFreezed ? '解冻' : '冻结'}}</button>
-    <a class="btn btn-primary right-float" href="/manage/relic/{{relic.code}}">编辑</a>
+    <button class="btn btn-danger right-float" data-toggle="modal" data-target="#deleting-modal" (click)="setDeletingRelic(relic)">删除</button>
+    <button class="btn right-float {{relic.isFreezed ? 'btn-light' : 'btn-warning'}}"  (click)="freeze(relic)">{{relic?.isFreezed ? '解冻' : '冻结'}}</button>
+    <a class="btn btn-primary right-float" routerLink="/manage/relic/{{relic.code}}">编辑</a>
   </div>
   <p>{{relic.description.slice(0, 200)}}......</p>
 </div>

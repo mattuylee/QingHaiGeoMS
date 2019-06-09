@@ -63,14 +63,19 @@
                     <th>类型代码</th>
                     <th><input id="relic-type-code" readonly="true" [value]="changedRelicType.code" /></th>
                 </tr>
+                <tr>
+                    <a [routerLink]="'/manage/comment/' + relic.code"
+                    [queryParams]="{targetType: 'relic', title: relic.name}"
+                    class="btn btn-primary btn-block">评论管理</a>
+                </tr>
             </tbody>
         </table>
     </div>
     <div class="col-sm-3 col-md-3 col-lg-3" *ngIf="relic">
         <div class="thumbnail">
             <img [src]="mediaUrl + relic?.pictures[0] + '?mode=low'" alt="暂无图片">
-            <div class="caption">
-                <p><a href="/manage/media/{{relic.code}}?targetType=relic&mediaType=picture" class="btn btn-primary" role="button">管理图片</a></p>
+            <div class="caption"><p><a [routerLink]="'/manage/media/' + relic.code" [queryParams]="{targetType: 'relic',mediaType: 'picture'}"
+                    class="btn btn-primary" role="button">管理图片</a></p>
             </div>
         </div>
     </div>
@@ -78,7 +83,9 @@
         <div class="thumbnail">
             <img [src]="mediaUrl + relic?.videos[0]?.poster + '?mode=low'" alt="暂无预览">
             <div class="caption">
-                <p><a href="/manage/media/{{relic.code}}?targetType=video&mediaType=picture" class="btn btn-primary" role="button">管理视频</a></p>
+                <p><a [routerLink]="'/manage/media/' + relic.code" class="btn btn-primary"
+                    [queryParams]="{targetType: 'relic',mediaType: 'video'}"
+                    role="button">管理视频</a></p>
             </div>
         </div>
     </div>

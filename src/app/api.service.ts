@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Location } from './entities/location';
 import { BaseResult, RelicTypesResult } from './entities/Result';
-import { Observable, of, observable } from 'rxjs'
-import { User } from './entities/User';
+import { Observable } from 'rxjs'
 
-declare let NativeObj
-//const BASE_URL = 'http://localhost:8080'
-export const BASE_URL = 'http://60.205.187.71:8080'
+import $ from 'jquery';
+import { TargetType } from './entities/enums';
+
+let NativeObj
+
+export let BASE_URL = 'http://localhost:8080'
+// export let BASE_URL = 'http://60.205.187.71:8080'
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +21,9 @@ export class ApiService {
     private http: HttpClient
   ) { }
 
-  private user = {id: '5ccbb97703b7a73e5cdf91c1'}
+  private user
+  /**@deprecated */
+  public readonly baseRoute: string = ''
 
   /**
    * 
@@ -34,8 +39,7 @@ export class ApiService {
     contentType?: string
   } = {}) {
     if (!this.user) {
-      alert('未登录')
-      return
+      this.user = { id: undefined }
     }
     let header: any = {}
     if (option.id !== false)
@@ -49,15 +53,34 @@ export class ApiService {
     return new HttpHeaders(header)
   }
 
+  public init() {
+    let temp
+    temp = window
+    NativeObj = temp.NativeObj
+    try {
+      let id = NativeObj.Login()
+      this.user = { id: id }
+      let baseUrl = NativeObj.GetBaseUrl()
+      if (baseUrl)
+        BASE_URL = baseUrl
+    }
+    catch (e) { alert(e.message) }
+    if (!this.user || !this.user.id)
+      alert('登陆失败！')
+    else
+      console.log('user', this.user)
+  }
+
   public getRelics(page: number = 1, size: number = 5, code: string = null) {
     let p = { page: page.toString(), size: size.toString() }
     if (code)
       Object.defineProperty(p, 'relicCode', { enumerable: true, value: code })
-    return this.handleError(this.http.get(BASE_URL + '/relic' , {
-      headers: this.makeHeader({ id: false }), params: p }))
+    return this.handleError(this.http.get(BASE_URL + '/relic', {
+      headers: this.makeHeader({ id: false }), params: p
+    }))
   }
   public getRelicTypes() {
-    let obs = Observable.create((observer)=>{
+    let obs = Observable.create((observer) => {
       let types
       try {
         types = NativeObj.GetRelicTypes()
@@ -80,8 +103,25 @@ export class ApiService {
     let p = { page: page.toString(), size: size.toString() }
     if (code)
       Object.defineProperty(p, 'code', { enumerable: true, value: code })
-    return this.handleError(this.http.get(BASE_URL + '/knowledge' , {
-      headers: this.makeHeader({ id: false }), params: p }))
+    return this.handleError(this.http.get(BASE_URL + '/knowledge', {
+      headers: this.makeHeader({ id: false }), params: p
+    }))
+  }
+  public getComments(targetCode: string, size: number, page: number) {
+    return this.handleError(this.http.get(BASE_URL + '/comments', {
+      headers: this.makeHeader(),
+      params: {
+        target: targetCode,
+        size: String(size),
+        page: String(page)
+      }
+    }))
+  }
+  public deleteComment(commentId: string) {
+    return this.handleError(this.http.delete(BASE_URL + '/comment', {
+      headers: this.makeHeader(),
+      params: { target: commentId }
+    }))
   }
   public freezeUser(userId: string) {
     let body = 'userId=' + encodeURIComponent(userId)
@@ -93,6 +133,30 @@ export class ApiService {
     let body = 'userId=' + encodeURIComponent(userId)
     return this.handleError(this.http.put(BASE_URL + '/admin/user/unfreeze', body, {
       headers: this.makeHeader({ id: true, form: true })
+    }))
+  }
+
+  public getUsers(page: number, size: number) {
+    this.makeHeader()
+    return this.handleError(this.http.get(BASE_URL + '/admin/allusers', {
+      headers: { adminID: this.user.id },
+      params: { page: String(page), size: String(size) }
+    }))
+  }
+  
+  //获取当前管理员用户。注意，信息仅包含id
+  public getCurrentAdmin() {
+    return this.user
+  }
+
+  public setAdministration(userId: string, setToAdmin: boolean) {
+    this.makeHeader()
+    return this.handleError(this.http.get(BASE_URL + '/admin/setAdmin', {
+      params: { whetherAdmin: String(setToAdmin) },
+      headers: {
+        superAdminID: this.user.id,
+        userID: userId
+      }
     }))
   }
 
@@ -116,7 +180,7 @@ export class ApiService {
   public updateRelic(update: any) {
     let obs = Observable.create((observer) => {
       let res = new BaseResult()
-      res.error = NativeObj.UpdateRelic(update)
+      res.error = NativeObj.UpdateRelic(JSON.stringify(update))
       observer.next(res)
       observer.complete()
     })
@@ -140,33 +204,38 @@ export class ApiService {
   }
   public deleteRelic(code: string) {
     let url = BASE_URL + '/admin/relic/delete?code=' + code;
-    this.http.delete(url, { headers: this.makeHeader() }).toPromise()
+    return this.handleError(this.http.delete(url, { headers: this.makeHeader() }))
+  }
+  public updateKnowledgeIntro(code: string, intro: string) {
+    let url = BASE_URL + '/admin/knowledge/update/intro';
+    let body = 'code=' + code + '&intro=' + encodeURIComponent(intro)
+    return this.handleError(this.http.put(url, body, { headers: this.makeHeader({ json: true }) }))
+  }
+
+  public updateKnowledgeTrait(code: string, trait: string) {
     let obs = Observable.create((observer) => {
       let res = new BaseResult()
-      res.error = NativeObj.DeleteRelic(code)
+      res.error = NativeObj.UpdateKnowledgeTrait(code, trait)
       observer.next(res)
       observer.complete()
     })
     return this.handleError(obs)
   }
-  public updateKnowledgeIntro(code: string, intro: string) {
-    let url = BASE_URL + '/admin/knowledge/update/intro';
-    return this.handleError(this.http.put(url, { intro: intro }, { headers: this.makeHeader({ json: true }) }))
-  }
+
   public deleteKnowledgePicture(code: string, picId: string) {
     let url = BASE_URL + '/admin/knowledge/delete/picture?code=' + code + '&picId=' + picId;
     return this.handleError(this.http.delete(url, { headers: this.makeHeader({ json: true }) }))
   }
   public reorderKnowledgePictures(code: string, order: number[]) {
     let url = BASE_URL + '/admin/knowledge/reorder/picture?code=' + code;
-    return this.handleError(this.http.put(url, { order: order }, { headers: this.makeHeader({ json: true }) }))
+    return this.handleError(this.http.put(url, order, { headers: this.makeHeader({ json: true }) }))
   }
   public reorderKnowledgeVideoes(code: string, order: number[]) {
     let url = BASE_URL + '/admin/knowledge/reorder/video?code=' + code;
-    return this.handleError(this.http.put(url, { order: order }, { headers: this.makeHeader({ json: true }) }))
+    return this.handleError(this.http.put(url, order, { headers: this.makeHeader({ json: true }) }))
   }
   public deleteKnowledgeVideo(code: string, videoId: string) {
-    let url = BASE_URL + '/admin/knowledge/delete/video?code=' + code + '&videoId' + videoId;
+    let url = BASE_URL + '/admin/knowledge/delete/video?code=' + code + '&videoId=' + videoId;
     return this.handleError(this.http.delete(url, { headers: this.makeHeader({}) }))
   }
   public freezeKnowledge(code: string) {
@@ -192,6 +261,56 @@ export class ApiService {
   public deleteAnswers(codes: string[]) {
     let url = BASE_URL + '/admin/qa/answer/delete';
     return this.handleError(this.http.delete(url, { headers: this.makeHeader({ json: true }), params: { code: codes } }))
+  }
+
+  public getRelicCount() {
+    return NativeObj.GetRelicCount()
+  }
+  public getKnowledgeCount() {
+    return NativeObj.GetKnowledgeCount()
+  }
+  public getUserCount() {
+    return NativeObj.GetUserCount()
+  }
+  public addPicture(file, code: string, target: TargetType) {
+    return Observable.create((observer)=>{
+      let url = BASE_URL + '/admin/' + TargetType[target] + '/add/picture?code=' + code
+      let form = new FormData()
+      form.append('picture', file, 'picture')
+      if (!XMLHttpRequest) {
+        observer.error('浏览器不支持异步上传，请升级浏览器')
+        return
+      }
+      let xhr = new XMLHttpRequest()
+      xhr.open('POST', url, true)
+      xhr.setRequestHeader('id', this.user.id)
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState == 4) {
+          if (xhr.status == 200)
+            observer.complete()
+          else
+            observer.error('服务器内部错误')
+        }
+      }
+      xhr.upload.onprogress = (ev) => {
+        observer.next(ev.loaded / ev.total)
+      }
+      xhr.onerror = (ev) => {
+        observer.error(ev)
+        console.log('error', ev)
+      }
+      xhr.send(form)
+    })
+  }
+  public addKnowledgePicture(file, code: string) {
+
+  }
+
+  public addRelicVideo(code: string) {
+    NativeObj.AddRelicVideo(code)
+  }
+  public addKnowledgeVideo(code: string) {
+    NativeObj.AddKnowledgeVideo(code)
   }
 
   public makeCounterArray(value: number): number[] {

@@ -12,6 +12,7 @@ export class Knowledge {
     public videos:VideoInfo[]//视频
     public likeCount:number//点赞数
     public isFreezed: boolean;
+    public trait: string;
     public recordTime: Date;
     public recorder: string;
 }

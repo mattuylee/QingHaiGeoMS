@@ -15,7 +15,8 @@ export class User {
     public weChat: string;
     public realName: string;//姓名
     public idCardNumber: string;
-    public MyFavorites: Favorite[]=[];
-    public MyLikes: Like[] = [];
     public creditCount: number;
+    public isAdmin: boolean;
+    public isFreezed: boolean
+    public isSuperAdmin: boolean;
 }

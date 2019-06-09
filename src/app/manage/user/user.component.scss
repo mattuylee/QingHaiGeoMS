@@ -1,20 +1,28 @@
-.relic-container {
+.title-container {
+    width: 100%;
+    text-align: center;
+}
+
+.user-container {
     border-bottom: 2px solid whitesmoke;
     padding: 10px;
 }
 .right-float {
-    margin: 4px;
+    margin: 0 4px;
     float: right;
 }
-.relic-title {
+.user-title {
     width: 100%;
     position: relative;
 }
-.relic-failed-alert {
+.user-failed-alert {
     position: fixed;
     top: 0;
     width:100%;
     z-index: 100;
+}
+.table tr th {
+    border: 0;
 }
 p {
     text-indent: 2em;

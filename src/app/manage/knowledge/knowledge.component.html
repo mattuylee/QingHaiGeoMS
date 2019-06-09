@@ -20,7 +20,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="delete(knowledge)">删除</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteKnowledge()">删除</button>
             </div>
         </div>
     </div>
@@ -28,12 +28,14 @@
 
 <div *ngFor="let knowledge of knowledges" class="knowledge-container">
   <div class="knowledge-title">
-    <a href="/manage/knowledge/{{knowledge.code}}" class="btn btn-link">
+    <a routerLink="/manage/knowledge/{{knowledge.code}}" class="btn btn-link">
       <h2>{{knowledge.name}}<small> [{{knowledge.code}}]</small></h2>
     </a>
-    <button class="btn btn-danger right-float" data-toggle="modal" data-target="#deleting-modal">删除</button>
-    <button class="btn btn-warning right-float" (click)="freeze(knowledge)">{{knowledge?.isFreezed ? '解冻' : '冻结'}}</button>
-    <a class="btn btn-primary right-float" href="/manage/knowledge/{{knowledge.code}}">编辑</a>
+    <button class="btn btn-danger right-float" data-toggle="modal" data-target="#deleting-modal"
+      (click)="setDeletingKnowledge(knowledge)">删除</button>
+    <button class="btn right-float  {{knowledge.isFreezed ? 'btn-light' : 'btn-warning'}}" (click)="
+      freeze(knowledge)">{{knowledge?.isFreezed ? '解冻' : '冻结'}}</button>
+    <a class="btn btn-primary right-float" routerLink="/manage/knowledge/{{knowledge.code}}">编辑</a>
   </div>
   <p>{{knowledge.description.slice(0, 200)}}......</p>
 </div>

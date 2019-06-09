@@ -16,8 +16,8 @@ export class BaseResult{
 export class RelicResult extends BaseResult{
     public relics:Relic[];
 }
-export class UserResult extends BaseResult{
-    public user:User;
+export class UsersResult extends BaseResult{
+    public users: User[];
 }
 export class CommentResult extends BaseResult{
     public comments:Comment[];

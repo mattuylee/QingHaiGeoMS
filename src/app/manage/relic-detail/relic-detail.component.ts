@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Relic } from 'src/app/entities/Relic';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService, BASE_URL } from 'src/app/api.service';
-import { RelicResult, BaseResult } from 'src/app/entities/Result';
+import { RelicResult, BaseResult, RelicTypesResult } from 'src/app/entities/Result';
 import { RelicType } from 'src/app/entities/RelicType';
 
 @Component({
@@ -22,6 +22,7 @@ export class RelicDetailComponent implements OnInit {
   changedRelicType: RelicType
   mediaUrl: string = BASE_URL + '/picture/'
   showSucceededAlert = false
+  relicTypes: RelicType[]
 
   ngOnInit() {
     let relicCode = this.route.snapshot.paramMap.get('code')
@@ -29,6 +30,9 @@ export class RelicDetailComponent implements OnInit {
       this.relic = null
       return
     }
+    this.api.getRelicTypes().subscribe((res: RelicTypesResult) => {
+      this.relicTypes = res.relicTypes
+    })
     this.api.getRelics(0, 0, relicCode).subscribe((res: RelicResult) => {
       if (res.error || !res.relics || !res.relics.length) {
         this.relic = null
