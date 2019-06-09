@@ -5,6 +5,11 @@ import { HeaderComponent } from './header/header.component';
 import { RelicDetailComponent } from './relic-detail/relic-detail.component';
 import { KnowledgeComponent } from './knowledge/knowledge.component';
 import { MediaComponent } from './media/media.component';
+import { KnowledgeDetailComponent } from './knowledge-detail/knowledge-detail.component';
+import { CommentComponent } from './comment/comment.component';
+import { UserComponent } from './user/user.component';
+import { RouterModule } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 @NgModule({
@@ -13,9 +18,14 @@ import { MediaComponent } from './media/media.component';
     RelicComponent,
     RelicDetailComponent,
     KnowledgeComponent,
-    MediaComponent
+    MediaComponent,
+    KnowledgeDetailComponent,
+    CommentComponent,
+    UserComponent
   ],
   imports: [
+    BrowserModule,
+    RouterModule,
     CommonModule
   ]
 })

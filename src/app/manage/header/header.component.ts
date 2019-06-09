@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { TargetType } from 'src/app/entities/enums';
 
 @Component({
   selector: 'app-header',
@@ -13,5 +14,8 @@ export class HeaderComponent implements OnInit {
   //当前选择项
   @Input() selectedItem: string
 
-  ngOnInit() { }
+  ngOnInit() {
+    if (typeof TargetType[this.selectedItem] == 'string')
+      this.selectedItem = TargetType[this.selectedItem]
+  }
 }

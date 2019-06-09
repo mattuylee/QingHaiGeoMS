@@ -7,8 +7,6 @@ import { RelicResult, BaseResult, KnowledgeResult } from 'src/app/entities/Resul
 import { Observable } from 'rxjs';
 import { TargetType } from 'src/app/entities/enums';
 
-declare let NativeObj
-
 @Component({
   selector: 'app-media',
   templateUrl: './media.component.html',
@@ -38,6 +36,10 @@ export class MediaComponent implements OnInit {
   draggingItemIndex: number = -1
   //切分点索引。调整顺序时使用
   splitIndex: number
+  //是否正在上传
+  uploading: boolean = false
+  //上传进度
+  uploadProgress: number
   //错误内容
   errText: string
 
@@ -73,18 +75,24 @@ export class MediaComponent implements OnInit {
         this.mediaOwner = (res as KnowledgeResult).knowledges[0]
 
       if (this.mediaType == 'picture') {
-        this.media = this.mediaOwner.pictures
-        if (this.media) {
-          for (let i = 0; i < this.media.length; ++i)
-            this.media[i] = BASE_URL + '/picture/' + this.media[i]
+        this.media = []
+        if (this.mediaOwner.pictures) {
+          for (let i = 0; i < this.mediaOwner.pictures.length; ++i) {
+            if (!this.mediaOwner.pictures[i])
+              continue
+            (this.media as string[]).push(BASE_URL + '/picture/' + this.mediaOwner.pictures[i])
+          }
         }
       }
       else if (this.mediaType == 'video') {
-        this.media = this.mediaOwner.videos
-        if (this.media) {
-          for (let i = 0; i < this.media.length; ++i) {
-            if (this.media[i].poster) this.media[i].poster = BASE_URL + '/picture/' + this.media[i].poster
-            this.media[i].video = BASE_URL + '/video/' + this.media[i].video
+        let media = this.mediaOwner.videos
+        if (media) {
+          for (let i = 0; i < media.length; ++i) {
+            if (!media[i]) continue
+            if (media[i].poster)
+              media[i].poster = BASE_URL + '/picture/' + media[i].poster
+            media[i].video = BASE_URL + '/video/' + media[i].video;
+            (this.media as VideoInfo[]).push(media[i])
           }
         }
       }
@@ -107,21 +115,20 @@ export class MediaComponent implements OnInit {
 
   drop() {
     //不移动
-    console.log(this.draggingItemIndex, this.splitIndex)
     if (this.splitIndex == this.draggingItemIndex || this.splitIndex == this.draggingItemIndex + 1) {
       this.draggingItemIndex = -1
-      this.splitIndex = this.orderArray.length  
+      this.splitIndex = this.orderArray.length
       return
     }
     let newOrderArray = []
     for (let i = 0; i < this.orderArray.length; ++i) {
       if (i == this.draggingItemIndex)
         continue
-      if (i == this.splitIndex){
+      if (i == this.splitIndex) {
         newOrderArray.push(this.orderArray[this.draggingItemIndex])
         newOrderArray.push(this.orderArray[i])
       }
-      else if (this.splitIndex == this.orderArray.length && i == this.orderArray.length - 1){
+      else if (this.splitIndex == this.orderArray.length && i == this.orderArray.length - 1) {
         newOrderArray.push(this.orderArray[i])
         newOrderArray.push(this.orderArray[this.draggingItemIndex])
       }
@@ -150,8 +157,16 @@ export class MediaComponent implements OnInit {
         this.errText = '无效参数'
         return
       }
-      obs.subscribe((res: BaseResult) => { 
-        this.errText = res.error
+      obs.subscribe((res: BaseResult) => {
+        if (res.error) {
+          this.errText = res.error
+          this.orderArray = this.oldOrderArray
+          return
+        }
+        let temp = []
+        this.orderArray.forEach((i) => temp.push(this.media[i]))
+        this.media = temp
+        this.orderArray = this.oldOrderArray = this.api.makeCounterArray(this.media.length)
       })
     }
     else {
@@ -166,10 +181,68 @@ export class MediaComponent implements OnInit {
     this.splitIndex = this.orderArray.length
   }
 
-  addMidea() {
-    if (this.mediaType == 'picture')
-      NativeObj.AddPicture(this.mediaOwner.code)
+  deletePicture(i) {
+    let obs: Observable<BaseResult>
+    let pid = (this.media[i] as string).slice((this.media[i] as string).lastIndexOf('/') + 1)
+    if (this.targetType == TargetType.relic)
+      obs = this.api.deleteRelicPicture(this.mediaOwner.code, pid)
+    else if (this.targetType == TargetType.knowledge)
+      obs = this.api.deleteKnowledgePicture(this.mediaOwner.code, pid)
+    obs.subscribe((res) => {
+      if (res.error) {
+        this.errText = res.error
+        return
+      }
+      let temp: string[] = this.media as string[]
+      temp = temp.slice(0, i).concat(temp.slice(i + 1))
+      this.media = temp
+      this.orderArray = this.api.makeCounterArray(this.media.length)
+    })
+  }
+  deleteVideo(i) {
+    let obs: Observable<BaseResult>
+    let vid = (this.media[i] as VideoInfo).video.slice((this.media[i] as VideoInfo).video.lastIndexOf('/') + 1)
+    if (this.targetType == TargetType.relic)
+      obs = this.api.deleteRelicVideo(this.mediaOwner.code, vid)
+    else if (this.targetType == TargetType.knowledge)
+      obs = this.api.deleteKnowledgeVideo(this.mediaOwner.code, vid)
+    obs.subscribe((res) => {
+      if (res.error) {
+        this.errText = res.error
+        return
+      }
+      let temp: VideoInfo[] = this.media as VideoInfo[]
+      temp = temp.slice(0, i).concat(temp.slice(i + 1))
+      this.media = temp
+      this.orderArray = this.api.makeCounterArray(this.media.length)
+    })
+  }
+
+  addVideo() {
+    if (this.mediaType == 'picture') return
+    if (this.targetType == TargetType.relic)
+      this.api.addRelicVideo(this.mediaOwner.code)
     else
-      NativeObj.AddVideo(this.mediaOwner.code)
+      this.api.addKnowledgeVideo(this.mediaOwner.code)
+  }
+
+  onPictureChanged(input: HTMLInputElement) {
+    if (!input.files.length || this.uploading)
+      return
+    this.uploading = true
+    this.uploadProgress = 0
+    let obs = this.api.addPicture(input.files[0], this.mediaOwner.code, this.targetType)
+    obs.subscribe({
+      next: (value) => {
+        this.uploadProgress = value * 100
+      },
+      complete: () => {
+        this.uploading = false
+      },
+      error: (e) => {
+        this.errText = e.message ? e.message : e
+        this.uploading = false
+      }
+    })
   }
 }

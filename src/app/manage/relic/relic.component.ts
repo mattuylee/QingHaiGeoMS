@@ -5,8 +5,6 @@ import { Relic } from 'src/app/entities/Relic';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 
-declare let NativeObj
-
 @Component({
   selector: 'app-relic',
   templateUrl: './relic.component.html',
@@ -22,17 +20,18 @@ export class RelicComponent implements OnInit {
     relics: Relic[] = []
     counter: number[]
     errText: string
+    deletingRelic: Relic = null
 
   ngOnInit() {
     this.page = Number(this.route.snapshot.paramMap.get('page'))
-    this.counter = this.api.makeCounterArray(NativeObj.GetRelicCount() / 10)
+    this.counter = this.api.makeCounterArray(this.api.getRelicCount() / 5)
     if (!this.page)
       this.page = 1
     this.loadRelics(this.page)
   }
 
   loadRelics(page: number) {
-    this.api.getRelics(page, 10).subscribe((res: RelicResult) => {
+    this.api.getRelics(page, 5).subscribe((res: RelicResult) => {
       if (res.error) {
         this.errText = res.error
         return
@@ -56,13 +55,18 @@ export class RelicComponent implements OnInit {
         relic.isFreezed = !relic.isFreezed
     })
   }
-  delete(relic: Relic) {
-    let obs = this.api.deleteRelic(relic.code)
+  setDeletingRelic(relic: Relic) {
+    this.deletingRelic = relic
+  }
+  deleteRelic() {
+    if (!this.deletingRelic) return
+    let obs = this.api.deleteRelic(this.deletingRelic.code)
     obs.subscribe((res: BaseResult) => {
       if (res.error)
         this.errText = res.error
       else
-        this.relics = this.relics.filter((i) => i.code != relic.code)
+        this.relics = this.relics.filter((i) => i.code != this.deletingRelic.code)
+      this.deletingRelic = null
     })
   }
 }

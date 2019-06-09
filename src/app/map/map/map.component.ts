@@ -4,6 +4,7 @@ import 'leaflet.chinatmsproviders'
 import { ApiService } from '../../api.service';
 import { RelicResult } from '../../entities/Result';
 import { Relic } from '../../entities/Relic';
+import { Router } from '@angular/router';
 declare let L;
 
 @Component({
@@ -15,6 +16,7 @@ export class MapComponent implements OnInit {
 
   constructor(
     private api: ApiService,
+    private router: Router
   ) { }
 
   private map
@@ -75,33 +77,42 @@ export class MapComponent implements OnInit {
         marker.on('click', () => {
           popup.setLatLng([i.location.latitude, i.location.longitude]).setContent(`
           <div class="container-fluid">
-	<div class="row-fluid">
-		<div class="span12">
-			<div class="hero-unit">
-				<h1><a href="/manage/relic/${i.code}">${i.name}</a></h1>
-				<p>
-					<h5>${'　　' + (i.description.length > 144 ? i.description.slice(0, 144) + '......' : i.description)}<h5>
-				</p>
-        <a class="btn btn-default btn-large" href="/manage/relic/${i.code}">查看详情</a>
-        <br/>
-        <br/>
-			</div>
-      <table class="table">
-        <tbody>
-        <tr><th><big>名称</big></th><th><big>${i.name}</big></th></tr>
-					<tr><th><big>编号</big></th><th><big>${i.code}</big></th></tr>
-          <tr><th><big>位置</big></th><th><big>${i.location.latitude.toFixed(3)}N,　${i.location.longitude.toFixed(3)}E</big></th></tr>
-					<tr><th><big>遗迹类型</big></th><th><big>${i.relicType.category}</big></th></tr>
-          <tr><th><big>类型代码</big></th><th><big>${i.relicType.code}</big></th></tr>
-        </tbody>
-			</table>
-		</div>
-	</div>
-</div>
+            <div class="row-fluid">
+            	<div class="span12">
+            		<div class="hero-unit">
+            			<h1><a id="t-${i.code}">${i.name}</a></h1>
+            			<p>
+            				<h5>${'　　' + (i.description.length > 144 ? i.description.slice(0, 144) + '......' : i.description)}<h5>
+            			</p>
+                   <a id="s-${i.code}" class="btn btn-default btn-large">查看详情</a>
+                   <br/>
+                   <br/>
+            		</div>
+                 <table class="table">
+                   <tbody>
+                   <tr><th><big>名称</big></th><th><big>${i.name}</big></th></tr>
+            				<tr><th><big>编号</big></th><th><big>${i.code}</big></th></tr>
+                     <tr><th><big>位置</big></th><th><big>${i.location.latitude.toFixed(3)}N,　${i.location.longitude.toFixed(3)}E</big></th></tr>
+            				<tr><th><big>遗迹类型</big></th><th><big>${i.relicType.category}</big></th></tr>
+                     <tr><th><big>类型代码</big></th><th><big>${i.relicType.code}</big></th></tr>
+                   </tbody>
+            		</table>
+            	</div>
+            </div>
+          </div>
           `).openOn(this.map)
+          let clickCallback = () => {
+            this.router.navigateByUrl('/manage/relic/' + i.code)
+          }
+          document.getElementById('t-' + i.code).addEventListener('click', clickCallback)
+          document.getElementById('s-' + i.code).addEventListener('click', clickCallback)
         })
       })
       this.loadRelics(page + 1)
     })
+  }
+
+  goto(url: string) {
+    this.router.navigateByUrl(url)
   }
 }

@@ -1,14 +1,28 @@
+<app-header [selectedItem]="targetType"></app-header>
 <div *ngIf="errText" id="failed-alert" class="knowledge-failed-alert alert alert-danger alert-dismissible" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
             aria-hidden="true">&times;</span></button>
     <h4>操作失败</h4>
     <div>{{errText}}</div>
 </div>
-
+<div *ngIf="uploading" class="progress">
+    <div class="progress-bar progress-bar-striped active" [style.width]="uploadProgress + 'vw'" role="progressbar"
+        aria-valuenow="45" aria-valuemin="0" aria-valuemax="100">
+        上传中
+    </div>
+</div>
 <div class="central-align-container">
     <h2>{{mediaOwner?.name}}</h2>
-    <a *ngIf="mediaOwner" class="btn btn-primary" (click)="addMedia()">
-        {{mediaType == 'picture' ? '添加图片' : '添加视频'}}</a>
+    <a *ngIf="mediaOwner && mediaType == 'video'" class="btn btn-primary" (click)="addVideo()">
+        添加视频
+    </a>
+    <div *ngIf="mediaOwner && mediaType == 'picture'" [class.disabled]="this.uploading"
+        class="btn btn-primary file-input">
+        添加图片
+        <input #fileInput type="file" accept="image/*" id="add-picture" (change)="onPictureChanged(fileInput)"
+            class="btn btn-primary" />
+    </div>
+
     <span>&nbsp;&nbsp;</span>
     <a *ngIf="mediaOwner" class="btn btn-primary" (click)="changeOrder()">
         {{canChangeOrder ? '保存顺序' : '调整顺序'}}</a>
@@ -20,14 +34,15 @@
 <div class="row">
     <ng-container *ngIf="mediaType == 'picture'">
         <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let i of orderArray.slice(0, splitIndex); let index = index;"
-            title="{{canChangeOrder ? 'true' : 'false'}}" draggable="{{canChangeOrder ? true : false}}" (dragstart)="startDrag($event, index)" (dragover)="dragOver($event, index)">
+            [draggable]="canChangeOrder" (dragstart)="startDrag($event, index)" (dragover)="dragOver($event, index)">
             <div class="thumbnail">
                 <img src="{{media[i]}}" alt="暂无预览">
                 <div class="caption">
                     <p class="central-align-container">
                         <a target="_blank" href="{{media[i]}}?mode=high" class="btn btn-primary" role="button">原图</a>
                         <span>&nbsp;</span>
-                        <a href="#" class="btn btn-danger" role="button">删除</a>
+                        <button class="btn btn-danger" [ngClass]="{'disabled': canChangeOrder}" role="button"
+                            (click)="deletePicture(i)">删除</button>
                     </p>
                 </div>
             </div>
@@ -37,7 +52,7 @@
             <!--调整顺序空白占位-->
         </div>
         <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let i of orderArray.slice(splitIndex); let index = index;"
-            draggable="{{canChangeOrder}}" (dragstart)="startDrag($event, index + splitIndex)"
+            [draggable]="canChangeOrder" (dragstart)="startDrag($event, index + splitIndex)"
             (dragover)="dragOver($event, index + splitIndex)">
             <div class="thumbnail">
                 <img src="{{media[i]}}" alt="暂无预览">
@@ -45,26 +60,47 @@
                     <p class="central-align-container">
                         <a target="_blank" href="{{media[i]}}?mode=high" class="btn btn-primary" role="button">原图</a>
                         <span>&nbsp;</span>
-                        <a href="#" class="btn btn-danger" role="button">删除</a>
+                        <button class="btn btn-danger" [ngClass]="{'disabled': canChangeOrder}" role="button"
+                            (click)="deletePicture(i)">删除</button>
                     </p>
                 </div>
             </div>
         </div>
     </ng-container>
 
+
     <ng-container *ngIf="mediaType == 'video'">
-        <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let i of orderArray;let index = index;"
-            draggable="{{canChangeOrder}}" (dragstart)="startDrag($event, index)" (dragover)="dragOver($event, index)"
-            (drop)="drop($event)">
+        <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let i of orderArray.slice(0, splitIndex); let index = index;"
+            [draggable]="canChangeOrder" (dragstart)="startDrag($event, index)" (dragover)="dragOver($event, index)">
             <div class="thumbnail">
-                <img [src]="media[i].poster" alt="暂无预览">
+                <img src="{{media[i].poster}}" alt="暂无预览">
                 <div class="caption">
-                    <h3>Thumbnail label</h3>
                     <p class="central-align-container">
                         <a target="_blank" href="{{media[i].video}}?mode=high" class="btn btn-primary"
                             role="button">查看</a>
                         <span>&nbsp;</span>
-                        <a href="#" class="btn btn-default" role="button">Button</a>
+                        <button class="btn btn-danger" [ngClass]="{'disabled': canChangeOrder}" role="button"
+                            (click)="deleteVideo(i)">删除</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3" (dragover)="dragOver($event, -1)" (drop)="drop()">
+            <div class="blank-block"></div>
+            <!--调整顺序空白占位-->
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let i of orderArray.slice(splitIndex); let index = index;"
+            [draggable]="canChangeOrder" (dragstart)="startDrag($event, index + splitIndex)"
+            (dragover)="dragOver($event, index + splitIndex)">
+            <div class="thumbnail">
+                <img src="{{media[i].poster}}" alt="暂无预览">
+                <div class="caption">
+                    <p class="central-align-container">
+                        <a target="_blank" href="{{media[i].video}}?mode=high" class="btn btn-primary"
+                            role="button">查看</a>
+                        <span>&nbsp;</span>
+                        <button class="btn btn-danger" [ngClass]="{'disabled': canChangeOrder}" role="button"
+                            (click)="deleteVideo(i)">删除</button>
                     </p>
                 </div>
             </div>
