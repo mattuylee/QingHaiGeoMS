@@ -186,6 +186,9 @@ export class ApiService {
     let url = BASE_URL + '/admin/relic/delete/video?code=' + code + '&videoId=' + vId;
     return this.handleError(this.http.delete(url, { headers: this.makeHeader() }))
   }
+  public playVideo(url: string) {
+    NativeObj.PlayVideo(url)
+  }
   public deleteRelic(code: string) {
     let url = BASE_URL + '/admin/relic/delete?code=' + code;
     return this.handleError(this.http.delete(url, { headers: this.makeHeader() }))
