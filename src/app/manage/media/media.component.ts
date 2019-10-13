@@ -217,7 +217,9 @@ export class MediaComponent implements OnInit {
       this.orderArray = this.api.makeCounterArray(this.media.length)
     })
   }
-
+  playVideo(i) {
+    this.api.playVideo((this.media[i] as VideoInfo).video + '?mode=high')
+  }
   addVideo() {
     if (this.mediaType == 'picture') return
     if (this.targetType == TargetType.relic)
