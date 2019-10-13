@@ -57,6 +57,7 @@ export class UserComponent implements OnInit {
   }
 
   freeze(user: User) {
+    if (this.currentAdmin && user.id == this.currentAdmin.id) { return }
     let obs: Observable<BaseResult>
     if (user.isFreezed)
       obs = this.api.unfreezeUser(user.id)

@@ -10,7 +10,7 @@
 </div>
 
 <div class="title-container">
-    <h1>{{knowledge?.name}} <small>[{{knowledge.code}}]</small></h1>
+    <h1>{{knowledge?.name}} <small>[{{knowledge?.code}}]</small></h1>
 </div>
 <div *ngIf="knowledge" class="para">
   <h4>简介：</h4>
@@ -27,22 +27,24 @@
 <div class="row">
 <div class="col-sm-3 col-md-3 col-lg-3" *ngIf="knowledge">
   <div class="thumbnail">
-      <img [src]="mediaUrl + knowledge?.pictures[0] + '?mode=low'" alt="暂无图片">
-      <div class="caption"><p><a [routerLink]="'/manage/media/' + knowledge.code" [queryParams]="{targetType: 'knowledge',mediaType: 'picture'}"
-              class="btn btn-primary" role="button">管理图片</a></p>
+      <img *ngIf="!knowledge?.pictures?.length" src="assets/no-preview.jpg"/>
+      <img *ngIf="knowledge?.pictures?.length" [src]="mediaUrl + knowledge?.pictures[0] + '?mode=low'" alt="暂无图片"/>
+      <div class="caption" style="text-align: center;">
+        <a class="btn btn-primary" role="button" [routerLink]="'/manage/media/' + knowledge.code" [queryParams]="{targetType: 'knowledge',mediaType: 'picture'}">管理图片</a>
       </div>
   </div>
 </div>
 <div class="col-sm-3 col-md-3 col-lg-3" *ngIf="knowledge">
   <div class="thumbnail">
-      <img [src]="mediaUrl + knowledge?.videos[0]?.poster + '?mode=low'" alt="暂无预览">
-      <div class="caption">
-          <p><a [routerLink]="'/manage/media/' + knowledge.code" class="btn btn-primary"
+      <img *ngIf="!knowledge?.videos[0]?.poster" src="assets/no-preview.jpg"/>
+      <img *ngIf="knowledge?.videos[0]?.poster" [src]="mediaUrl + knowledge?.videos[0]?.poster + '?mode=low'" alt="暂无预览">
+      <div class="caption" style="text-align: center;">
+          <a [routerLink]="'/manage/media/' + knowledge.code" class="btn btn-primary"
               [queryParams]="{targetType: 'knowledge',mediaType: 'video'}"
-              role="button">管理视频</a></p>
+              role="button">管理视频</a>
       </div>
   </div>
 </div>
 </div>
-<a routerLink="/manage/comment/{{knowledge.code}}" [queryParams]="{targetType: 'knowledge'}"
+<a routerLink="/manage/comment/{{knowledge?.code}}" [queryParams]="{targetType: 'knowledge'}"
 class="btn btn-primary btn-block">评论管理</a>
