@@ -10,7 +10,7 @@
 </div>
 
 <div class="title-container">
-    <h1>{{relic?.name}}</h1>
+    <h1>{{boundData?.name}}</h1>
 </div>
 <div *ngIf="relic" id="relic-description" contenteditable="true">{{relic?.description}}</div>
 <div class="row-fluid">
@@ -52,8 +52,10 @@
                                 {{changedRelicType.category}}&nbsp;
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="max-height: 60vh; overflow: auto;">
-                                <li *ngFor="let i of relicTypes"><a (click)="changeRelicType(i)">{{i.category}}[{{i.code}}]</a></li>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1"
+                                style="max-height: 60vh; overflow: auto;">
+                                <li *ngFor="let i of relicTypes"><a
+                                        (click)="changeRelicType(i)">{{i.category}}[{{i.code}}]</a></li>
                             </ul>
                         </div>
                     </th>
@@ -64,27 +66,30 @@
                 </tr>
                 <tr>
                     <a [routerLink]="'/manage/comment/' + relic.code"
-                    [queryParams]="{targetType: 'relic', title: relic.name}"
-                    class="btn btn-primary btn-block">评论管理</a>
+                        [queryParams]="{targetType: 'relic', title: relic.name}"
+                        class="btn btn-primary btn-block">评论管理</a>
                 </tr>
             </tbody>
         </table>
     </div>
     <div class="col-sm-3 col-md-3 col-lg-3" *ngIf="relic">
         <div class="thumbnail">
-            <img [src]="mediaUrl + relic?.pictures[0] + '?mode=low'" alt="暂无图片">
-            <div class="caption"><p><a [routerLink]="'/manage/media/' + relic.code" [queryParams]="{targetType: 'relic',mediaType: 'picture'}"
-                    class="btn btn-primary" role="button">管理图片</a></p>
+            <img *ngIf="!relic?.pictures?.length" src="assets/no-preview.jpg" />
+            <img *ngIf="relic?.pictures?.length" [src]="mediaUrl + relic?.pictures[0] + '?mode=low'" alt="暂无图片">
+            <div class="caption" style="text-align: center;">
+                <p><a [routerLink]="'/manage/media/' + relic.code"
+                        [queryParams]="{targetType: 'relic',mediaType: 'picture'}" class="btn btn-primary"
+                        role="button">管理图片</a></p>
             </div>
         </div>
     </div>
     <div class="col-sm-3 col-md-3 col-lg-3" *ngIf="relic">
         <div class="thumbnail">
-            <img [src]="mediaUrl + relic?.videos[0]?.poster + '?mode=low'" alt="暂无预览">
-            <div class="caption">
+            <img *ngIf="!relic?.videos[0]?.poster" src="assets/no-preview.jpg" />
+            <img *ngIf="relic?.videos[0]?.poster" [src]="mediaUrl + relic?.videos[0]?.poster + '?mode=low'" alt="暂无预览">
+            <div class="caption" style="text-align: center;">
                 <p><a [routerLink]="'/manage/media/' + relic.code" class="btn btn-primary"
-                    [queryParams]="{targetType: 'relic',mediaType: 'video'}"
-                    role="button">管理视频</a></p>
+                        [queryParams]="{targetType: 'relic',mediaType: 'video'}" role="button">管理视频</a></p>
             </div>
         </div>
     </div>

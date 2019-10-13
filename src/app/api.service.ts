@@ -10,7 +10,7 @@ import { TargetType } from './entities/enums';
 let NativeObj
 
 // export let BASE_URL = 'http://localhost:8080'
-export let BASE_URL = 'http://47.108.76.144:8080'
+export let BASE_URL = 'http://47.108.76.144:8081'
 
 @Injectable({
   providedIn: 'root'
