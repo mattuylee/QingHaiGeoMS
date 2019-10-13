@@ -23,24 +23,23 @@
                 </tr>
                 <tr>
                     <th>名称</th>
-                    <th><input id="relic-name" value="{{relic?.name}}" /></th>
+                    <th><input id="relic-name" [(ngModel)]="boundData.name" /></th>
                 </tr>
                 <tr>
                     <th>位置</th>
                     <th>
-                        <input type="number" id="relic-latitude" value="{{relic?.location.latitude.toFixed(3)}}"
+                        <input type="number" id="relic-latitude" [(ngModel)]="boundData.location.latitude"
                             step="0.001" />
                         °N,&nbsp;
-                        <input type="number" id="relic-longitude" value="{{relic?.location.longitude.toFixed(3)}}"
+                        <input type="number" id="relic-longitude" [(ngModel)]="boundData.location.longitude"
                             step="0.001" />
                         °E
-
                     </th>
                 </tr>
                 <tr>
                     <th>高程</th>
                     <th>
-                        <input type="number" id="relic-altitude" value="{{relic?.location.altitude}}" />
+                        <input type="number" id="relic-altitude" [(ngModel)]="boundData.location.altitude" />
                         m
                     </th>
                 </tr>
@@ -53,7 +52,7 @@
                                 {{changedRelicType.category}}&nbsp;
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="max-height: 60vh; overflow: auto;">
                                 <li *ngFor="let i of relicTypes"><a (click)="changeRelicType(i)">{{i.category}}[{{i.code}}]</a></li>
                             </ul>
                         </div>
@@ -61,7 +60,7 @@
                 </tr>
                 <tr>
                     <th>类型代码</th>
-                    <th><input id="relic-type-code" readonly="true" [value]="changedRelicType.code" /></th>
+                    <th><input id="relic-type-code" readonly="true" [(ngModel)]="changedRelicType.code" /></th>
                 </tr>
                 <tr>
                     <a [routerLink]="'/manage/comment/' + relic.code"
