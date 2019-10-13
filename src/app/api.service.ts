@@ -9,8 +9,8 @@ import { TargetType } from './entities/enums';
 
 let NativeObj
 
-export let BASE_URL = 'http://localhost:8080'
-// export let BASE_URL = 'http://60.205.187.71:8080'
+// export let BASE_URL = 'http://localhost:8080'
+export let BASE_URL = 'http://47.108.76.144:8080'
 
 @Injectable({
   providedIn: 'root'
@@ -80,23 +80,7 @@ export class ApiService {
     }))
   }
   public getRelicTypes() {
-    let obs = Observable.create((observer) => {
-      let types
-      try {
-        types = NativeObj.GetRelicTypes()
-      }
-      catch {
-        observer.error('获取遗迹类型列表失败')
-        return
-      }
-      let res = new RelicTypesResult();
-      if (types)
-        res.relicTypes = types
-      else
-        res.error = '未获取到遗迹类型列表'
-      observer.next(res)
-      observer.complete()
-    })
+    const obs = this.http.get(BASE_URL + '/relicTypes')
     return this.handleError(obs)
   }
   public getKnowledges(page: number, size: number, code: string = null) {
@@ -301,9 +285,6 @@ export class ApiService {
       }
       xhr.send(form)
     })
-  }
-  public addKnowledgePicture(file, code: string) {
-
   }
 
   public addRelicVideo(code: string) {

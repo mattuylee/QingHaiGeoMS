@@ -23,6 +23,8 @@ export class RelicDetailComponent implements OnInit {
   mediaUrl: string = BASE_URL + '/picture/'
   showSucceededAlert = false
   relicTypes: RelicType[]
+  //修改的数据
+  boundData: any = {}
 
   ngOnInit() {
     let relicCode = this.route.snapshot.paramMap.get('code')
@@ -40,6 +42,10 @@ export class RelicDetailComponent implements OnInit {
         return
       }
       this.relic = res.relics[0]
+      this.boundData = JSON.parse(JSON.stringify(this.relic))
+      if(!this.boundData.location) {
+        this.boundData.location = {}
+      }
       if (!this.relic.pictures) this.relic.pictures = []
       if (!this.relic.videos) this.relic.videos = []
       this.changedRelicType = this.relic.relicType
@@ -47,18 +53,9 @@ export class RelicDetailComponent implements OnInit {
   }
 
   updateRelic() {
-    let info = {
-      code: this.relic.code,
-      name: document.getElementById('relic-name').innerText,
-      relicTypeCode: document.getElementById('relic-type-code').innerText,
-      description: document.getElementById('relic-description').innerText,
-      location: {
-        latitude: document.getElementById('relic-latitude').innerText,
-        longitude: document.getElementById('relic-longitude').innerText,
-        altitude: document.getElementById('relic-altitude').innerText
-      }
-    }
-    this.api.updateRelic(info).subscribe((res: BaseResult) => {
+    this.boundData.relicTypeCode = this.changedRelicType.code
+    this.boundData.description = document.getElementById('relic-description').innerText
+    this.api.updateRelic(this.boundData).subscribe((res: BaseResult) => {
       if (res.error) {
         this.errText = res.error
         return

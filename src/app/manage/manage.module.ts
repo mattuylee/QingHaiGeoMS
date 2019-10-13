@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RelicComponent } from './relic/relic.component';
 import { HeaderComponent } from './header/header.component';
 import { RelicDetailComponent } from './relic-detail/relic-detail.component';
@@ -26,7 +27,8 @@ import { BrowserModule } from '@angular/platform-browser';
   imports: [
     BrowserModule,
     RouterModule,
-    CommonModule
+    CommonModule,
+    FormsModule
   ]
 })
 export class ManageModule { }
