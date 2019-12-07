@@ -14,6 +14,8 @@ export class AppComponent implements OnInit {
     private api: ApiService
   ) { }
 
+  // userName: string
+  readonly currentYear = new Date().getFullYear()
   ngOnInit() {
     this.api.init()
   }

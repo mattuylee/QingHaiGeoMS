@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import 'leaflet/dist/leaflet.js';
 import 'leaflet.chinatmsproviders'
-import { ApiService } from '../../api.service';
-import { RelicResult } from '../../entities/Result';
-import { Relic } from '../../entities/Relic';
+import { ApiService } from '../api.service';
+import { RelicResult } from '../entities/Result';
+import { Relic } from '../entities/Relic';
 import { Router } from '@angular/router';
 declare let L;
 
@@ -30,16 +30,6 @@ export class MapComponent implements OnInit {
       maxZoom: 18,
       minZoom: 5
     });
-    var Gaodimga = L.tileLayer.chinaProvider('TianDiTu.Satellite.Annotion', {
-      maxZoom: 18,
-      minZoom: 5
-    });
-    var Gaodimage = L.layerGroup([Gaodimgem, Gaodimga]);
-
-    var baseLayers = {
-      "地图": Gaode,
-      "影像": Gaodimage,
-    }
 
     this.map = L.map("mapDiv", {
       center: [35.85, 96.35],
@@ -48,7 +38,6 @@ export class MapComponent implements OnInit {
       zoomControl: false
     });
 
-    L.control.layers(baseLayers, null).addTo(this.map);
     L.control.zoom({
       zoomInTitle: '放大',
       zoomOutTitle: '缩小',
@@ -56,10 +45,6 @@ export class MapComponent implements OnInit {
     }).addTo(this.map);
 
     this.loadRelics(1)
-
-    this.map.on('click', (e) => {
-      console.log(e)
-    })
   }
 
   //递归加载遗迹
