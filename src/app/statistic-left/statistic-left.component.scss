@@ -1,0 +1,26 @@
+.statistic-item {
+    margin: 8px;
+    .titlebar {
+        background-size: 100%;
+        background-repeat: no-repeat;
+        padding: 8px 16px;
+        padding-top: 4px;
+        color: white;
+        .big {
+            font-size: 22px;
+            font-weight: bold;
+        }
+    }
+    .board {
+        background: #7fffffff;
+    }
+    .titlebar-statistic {
+        background-image: url(../../assets/bg/title1.png);
+    }
+    .titlebar-pie {
+        background-image: url(../../assets/bg/title2.png);
+    }
+    .titlebar-moment {
+        background-image: url(../../assets/bg/title3.png);
+    }
+}

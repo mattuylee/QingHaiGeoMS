@@ -21,7 +21,9 @@ export class ApiService {
     private http: HttpClient
   ) { }
 
-  private user
+  private user = {
+    id: '1'
+  } as any
   /**@deprecated */
   public readonly baseRoute: string = ''
 

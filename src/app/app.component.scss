@@ -1,32 +1,117 @@
-div#parent{
+$color-main: rgb(113, 213, 253);
+$color-second: rgb(148, 224, 253);
+
+.header {
+    background: $color-main;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .left {
+        flex-grow: 1;
+    }
+    .right {
+        flex-grow: 0;
+        padding: 0 16px;
+        line-height: 64px;
+    }
+    .left, .right {
+        display: flex;
+        align-items: center;
+        cursor: default;
+    }
+    .title {
+        display: inline-block;
+        font-size: 26px;
+        font-weight: bold;
+        line-height: 64px;
+        margin: 0;
+    }
+    .logo {
+        margin: 8px 16px;
+        height: 48px;
+    }
+    .profile {
+        height: 24px;
+        margin: 20px 8px;
+    }
+    .username {
+        display: inline-block;
+        max-width: 152px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+.footer {
+    text-align: center;
+    line-height: 36px;
+    background: $color-main;
+    bottom: 0;
+    position: absolute;
+    height: 36px;
+    width: 100%;
+}
+.content-wrapper {
+    background: $color-second;
+    background: url(../assets/background.png);
     position: relative;
-    height: 600px;
-    width: 100%;
-}
-div#parent div#mapDiv{
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    height: 600px;
-    width: 100%;
-    z-index: 80;
-}
-div#parent div#menu{
-    position: absolute;
-    left: 50px;
-    top: 45px;
-    z-index: 100;
-    background-color: rgb(225, 236, 247);
-    width: 120px;
-}
-div#parent button#btn{
-    position: absolute;
-    left: 50px;
-    top: 10px;
-    z-index: 100;
-    width: 120px;
-}
-div#parent li{
-    list-style: none;
-    text-indent: -25px;
+    display: flex;
+    height: calc(100vh - 64px - 36px);
+    .left-board, .right-board {
+        width: 300px;
+        overflow: visible;
+    }
+    .content {
+        flex-grow: 1;
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        overflow: hidden;
+        .map {
+            position: relative;
+            flex-grow: 1;
+            margin: 8px;
+        }
+        .navigation {
+            padding: 16px;
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+        }
+        @media screen and (max-height: 600px) {
+            .navigation {
+                position: absolute;
+                z-index: 1000;
+            }
+        }
+        .nav-item {
+            align-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 1;
+            height: 96px;
+            justify-content: center;
+            width: 96px;
+            img {
+                width: 36px;
+                max-width: 100%;
+                height: auto;
+            }
+            span {
+                display: block;
+                text-align: center;
+            }
+        }
+        .nav-item:hover {
+            background: rgb(50, 85, 153);
+        }
+        .nav-item.active {
+            background: rgb(1, 24, 111);
+        }
+    }
 }
