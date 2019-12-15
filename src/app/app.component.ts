@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from './api.service';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -7,16 +8,19 @@ import { ApiService } from './api.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  
-  title = '青海遗迹旅游管理系统';
-
   constructor (
+    private router: Router,
     private api: ApiService
   ) { }
 
-  // userName: string
   readonly currentYear = new Date().getFullYear()
+  shouldRightShow = true
   ngOnInit() {
     this.api.init()
+    this.router.events.subscribe((ev: NavigationEnd) => {
+      if (!(ev instanceof NavigationEnd)) { return }
+      this.shouldRightShow = ev.urlAfterRedirects == '' || ev.urlAfterRedirects == '/'
+    })
   }
 }
+

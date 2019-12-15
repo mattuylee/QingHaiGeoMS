@@ -9,8 +9,20 @@ import { MediaComponent } from './media/media.component';
 import { KnowledgeDetailComponent } from './knowledge-detail/knowledge-detail.component';
 import { CommentComponent } from './comment/comment.component';
 import { UserComponent } from './user/user.component';
-import { RouterModule } from '@angular/router';
-import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule, Routes } from '@angular/router';
+import { ListComponent } from './list/list.component';
+
+const routes: Routes = [
+  { path: '', component: ListComponent },
+  
+  { path: 'relic', component: RelicComponent },
+  { path: 'relic/:code', component: RelicDetailComponent },
+  { path: 'knowledge', component: KnowledgeComponent },
+  { path: 'knowledge/:code', component: KnowledgeDetailComponent },
+  { path: 'comment/:code', component: CommentComponent },
+  { path: 'media/:code', component: MediaComponent },
+  { path: 'user', component: UserComponent }
+];
 
 
 @NgModule({
@@ -22,10 +34,11 @@ import { BrowserModule } from '@angular/platform-browser';
     MediaComponent,
     KnowledgeDetailComponent,
     CommentComponent,
-    UserComponent
+    UserComponent,
+    ListComponent
   ],
   imports: [
-    BrowserModule,
+    RouterModule.forChild(routes),
     RouterModule,
     CommonModule,
     FormsModule

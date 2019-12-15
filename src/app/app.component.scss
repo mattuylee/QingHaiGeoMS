@@ -1,8 +1,7 @@
-$color-main: rgb(113, 213, 253);
-$color-second: rgb(148, 224, 253);
+@import "./variable.scss";
 
 .header {
-    background: $color-main;
+    background: $color-back-main;
     height: 64px;
     display: flex;
     align-items: center;
@@ -46,14 +45,13 @@ $color-second: rgb(148, 224, 253);
 .footer {
     text-align: center;
     line-height: 36px;
-    background: $color-main;
+    background: $color-back-main;
     bottom: 0;
     position: absolute;
     height: 36px;
     width: 100%;
 }
 .content-wrapper {
-    background: $color-second;
     background: url(../assets/background.png);
     position: relative;
     display: flex;
@@ -61,31 +59,28 @@ $color-second: rgb(148, 224, 253);
     .left-board, .right-board {
         width: 300px;
         overflow: visible;
+        z-index: 1000;
     }
     .content {
-        flex-grow: 1;
         display: flex;
-        position: relative;
         flex-direction: column;
+        flex-grow: 1;
         overflow: hidden;
+        position: relative;
         .map {
             position: relative;
             flex-grow: 1;
             margin: 8px;
         }
         .navigation {
-            padding: 16px;
             display: flex;
             justify-content: space-around;
-            width: 100%;
             max-width: 800px;
             overflow: hidden;
-        }
-        @media screen and (max-height: 600px) {
-            .navigation {
-                position: absolute;
-                z-index: 1000;
-            }
+            padding: 16px;
+            position: absolute;
+            width: 100%;
+            z-index: 1000;
         }
         .nav-item {
             align-items: center;
@@ -108,10 +103,11 @@ $color-second: rgb(148, 224, 253);
             }
         }
         .nav-item:hover {
-            background: rgb(50, 85, 153);
+            background: $color-back-active;
         }
         .nav-item.active {
-            background: rgb(1, 24, 111);
+            background: $color-back-selected;
+            color: white;
         }
     }
 }

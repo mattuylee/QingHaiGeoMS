@@ -1,0 +1,42 @@
+.list-container {
+    padding: 8px;
+}
+.titlebar {
+    background-image: url(../../../assets/bg/title1.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    color: white;
+    padding: 2px 0 6px 16px;
+    position: relative;
+    .big {
+        font-size: 22px;
+        font-weight: bold;
+    }
+    .search {
+        bottom: 2px;
+        color: black;
+        display: flex;
+        font-size: 12px;
+        height: 22px;
+        position: absolute;
+        right: 2px;
+        width: 40%;
+        input {
+            flex-grow: 1;
+            width: 0;
+            padding: 0 2px;
+        }
+    }
+}
+.table-container {
+    width: fit-content;
+    overflow-x: hidden;
+    background: rgba(255, 255, 255, 0.8);
+}
+table {
+    th, td {
+        white-space: nowrap;
+        padding: 8px;
+        border: 1px solid silver;
+    }
+}
