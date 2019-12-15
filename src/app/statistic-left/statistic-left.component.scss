@@ -1,18 +1,38 @@
+@import "../statistic-panel.scss";
+
 .statistic-item {
-    margin: 8px;
-    .titlebar {
-        background-size: 100%;
-        background-repeat: no-repeat;
-        padding: 8px 16px;
-        padding-top: 4px;
-        color: white;
-        .big {
-            font-size: 22px;
-            font-weight: bold;
-        }
+    ul {
+        list-style: none;
+        padding: 16px 0;
+        text-align: right;
     }
-    .board {
-        background: #7fffffff;
+    .category, .sub-category {
+        display: flex;
+        align-items: center;
+        .name {
+            width: 100px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            margin: 0 8px;
+        }
+        .bar-container {
+            height: 12px;
+            flex-grow: 1;
+            margin: 0 4px;
+            position: relative;
+        }
+        .bar {
+            border-radius: 6px;
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+        .num {
+            margin: 0 8px;
+            overflow: hidden;
+            width: 24px;
+        }
     }
     .titlebar-statistic {
         background-image: url(../../assets/bg/title1.png);

@@ -1,17 +1,32 @@
-<div class="statistic-item">
-  <div class="titlebar titlebar-statistic">
-    <span>遗迹点</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="big">61个</span>
+<div class="statistic-container">
+  <div class="statistic-item">
+    <div class="titlebar titlebar-statistic">
+      <span>遗迹点</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="big">{{ relicData?.number }}个</span>
+    </div>
+    <div class="board">
+      <ul *ngIf="relicData">
+        <li class="{{ item.topRelicTypeCode ? '' : 'sub-' }}category" *ngFor="let item of relicData.classify">
+          <span class="name" [title]="item.relicTypeName">{{ item.relicTypeName }}</span>
+          <div class="bar-container" title="{{item.relicTypeName}}，{{item.thisTypePercent * 100}}%">
+            <span class="bar" [style.width]="item.thisTypePercent * 80 + 20 + '%'"></span>
+          </div>
+          <span class="num">{{ item.number }}</span>
+        </li>
+      </ul>
+    </div>
   </div>
-  <div class="board"></div>
 
-</div>
-<div class="statistic-item">
-  <div class="titlebar titlebar-pie">
-    <span>遗迹点饼状图</span><span class="big">（%）</span>
+  <div class="statistic-item">
+    <div class="titlebar titlebar-pie">
+      <span>遗迹点饼状图</span><span class="big">（%）</span>
+    </div>
+    <div class="board">
+      <div #pieGraph class="pie-graph"></div>
+    </div>
   </div>
-</div>
-<div class="statistic-item">
-  <div class="titlebar titlebar-moment">
-    <span>随手拍</span><span class="big">30个</span>
+  <div class="statistic-item">
+    <div class="titlebar titlebar-moment">
+      <span>随手拍</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="big">{{ momentData?.number }}个</span>
+    </div>
   </div>
 </div>

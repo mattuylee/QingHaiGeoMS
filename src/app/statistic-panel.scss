@@ -1,0 +1,57 @@
+@import "./variable.scss";
+
+.statistic-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+.statistic-item:first-of-type {
+    height: calc(100% - 288px);
+}
+.statistic-item:nth-of-type(2) {
+    height: 200px;
+}
+.statistic-item {
+    margin: 8px;
+    ul {
+        height: 100%;
+        width: 100%;
+        overflow: auto;
+    }
+    .titlebar {
+        background-repeat: no-repeat;
+        background-size: 100% 160%;
+        color: white;
+        padding: 2px 0 6px 16px;
+        .big {
+            font-size: 22px;
+            font-weight: bold;
+            display: inline-block;
+            width: 64px;
+            text-align: right;
+        }
+    }
+    .board {
+        background: rgba(255, 255, 255, 0.5);
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+        height: calc(100% - 40px);
+        .category {
+            color: #01186F;
+            .bar {
+                background: $color-fore-secondary;
+            }
+        }
+        .sub-category {
+            color: $color-fore-secondary;
+            .bar {
+                background: $color-fore-info;
+            }
+        }
+    }
+    .pie-graph {
+        height: 100%;
+        overflow: auto;
+    }
+}

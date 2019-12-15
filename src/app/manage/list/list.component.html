@@ -1,0 +1,26 @@
+<div class="list-container">
+  <div class="titlebar">
+    <span>遗迹点</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="big">61个</span>
+    <div class="search">
+      <input type="text" (keyup.enter)="search()" /><button type="submit" (click)="search()">搜索</button>
+    </div>
+  </div>
+  <div class="table-container">
+  <table>
+    <tr>
+      <th>序号</th>
+      <th *ngFor="let header of headers">{{header}}</th>
+      <th>发布状态</th>
+      <th>详情</th>
+      <th>删除</th>
+    </tr>
+    <tr *ngFor="let row of [1,2,3,4,5,6]; let i = index">
+      <td>{{i + 1}}</td>
+      <td *ngFor="let header of headers"></td>
+      <td><button>解冻</button></td>
+      <td><button>详情</button></td>
+      <td><button>删除</button></td>
+    </tr>
+  </table>
+</div>
+</div>
