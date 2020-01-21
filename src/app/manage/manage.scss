@@ -1,0 +1,47 @@
+//内容列表
+.table-container {
+    height: calc(100% - 80px);
+}
+.qh-table {
+    .btn {
+        padding: 4px 12px;
+    }
+    tr {
+        height: 40px;
+    }
+    th, td {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding: 4px;
+    }
+}
+
+//批量上传按钮
+.upload-bar {
+    background-color: #01186F;
+    background-size: contain;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    color: white;
+    font-size: 20px;
+    height: 40px;
+    left: 8px;
+    line-height: 40px;
+    overflow: hidden;
+    position: absolute;
+    right: 8px;
+    text-align: center;
+    &.relic {
+        background-image: url(../../assets/bg/relic.png);
+        cursor: pointer;
+    }
+    &.knowledge {
+        background-image: url(../../assets/bg/knowledge.png);
+        cursor: pointer;
+    }
+    img {
+        position: absolute;
+        height: 100%;
+        width: auto;
+    }
+}

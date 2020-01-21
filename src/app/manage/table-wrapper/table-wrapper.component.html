@@ -1,0 +1,8 @@
+<div class="table-wrapper" [ngClass]="{folded: service.tableFolded}">
+  <div class="table-content">
+    <ng-content></ng-content>
+  </div>
+  <div class="expander">
+    <img src="assets/sidebar/expand_h.png" title="{{service.tableFolded ? '展开' : '折叠'}}" (click)="toggleFoldState()" />
+  </div>
+</div>

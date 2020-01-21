@@ -1,0 +1,25 @@
+<app-titlebar [title]="'随手拍'" [count]="resultAmount"></app-titlebar>
+<div class="table-container">
+  <app-table-wrapper>
+    <table class="qh-table">
+      <tr>
+        <th>序号</th>
+        <th>标题</th>
+        <th>发布账号</th>
+        <th>发布时间</th>
+        <th>查看</th>
+        <th>删除</th>
+      </tr>
+      <tr *ngFor="let moment of moments; let i = index">
+        <td>{{itemCount * (page - 1) + i + 1}}</td>
+        <td>{{moment.text}}</td>
+        <td>{{moment.user?.userName}}</td>
+        <td>{{moment.time | date:'y-MM-dd'}}</td>
+        <td><button class="btn btn-primary" (click)="showDetail(user)">查看</button></td>
+        <td><button class="btn btn-danger" (click)="deleteUser(user)">删除</button></td>
+      </tr>
+    </table>
+    <app-pagination [itemCount]="resultAmount" [pageCount]="pageCount" [current]="page" (onJump)="jump($event)"></app-pagination>
+  </app-table-wrapper>
+</div>
+<div class="upload-bar"></div>

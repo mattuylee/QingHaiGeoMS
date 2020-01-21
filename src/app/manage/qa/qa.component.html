@@ -1,0 +1,48 @@
+<app-titlebar [title]="'互动问答'" [count]="questionAmount" [searchBar]="true" (onSearch)="loadQuestions(1, $event)">
+</app-titlebar>
+<div class="table-container">
+  <app-table-wrapper>
+    <table class="qh-table">
+      <tr>
+        <th>&nbsp;</th>
+        <th>序号</th>
+        <th>问题描述</th>
+        <th>发布账号</th>
+        <th>发布时间</th>
+        <th>删除</th>
+      </tr>
+      <ng-container *ngFor="let question of questions; let i = index">
+        <tr>
+          <td><span class="question-expander"
+              (click)="toggleAnswers(i)">{{answerMap[i].expanded ? '-' : '+'}}</span></td>
+          <td>{{itemCount * (page - 1) + i + 1}}</td>
+          <td>{{question.question}}</td>
+          <td>{{question.user?.userName}}</td>
+          <td>{{question.time | date:'y-MM-dd'}}</td>
+          <td><button class="btn btn-danger" (click)="deleteQuestion(i)">删除</button></td>
+        </tr>
+        <ng-container *ngIf="answerMap[i]?.expanded">
+          <tr>
+            <th>&nbsp;</th>
+            <th>序号</th>
+            <th>回答内容</th>
+            <th>回答账号</th>
+            <th>回答时间</th>
+            <th>删除</th>
+          </tr>
+          <tr *ngFor="let answer of answerMap[i]?.answers; let j = index">
+            <td>&nbsp;</td>
+            <td>{{j + 1}}</td>
+            <td>{{answer.answer}}</td>
+            <td>{{answer.user?.userName}}</td>
+            <td>{{answer.time | date:'y-MM-dd'}}</td>
+            <td><button class="btn btn-danger" (click)="deleteAnswer(i, j)">删除</button></td>
+          </tr>
+        </ng-container>
+      </ng-container>
+    </table>
+    <app-pagination [itemCount]="questionAmount" [pageCount]="pageCount" [current]="page" (onJump)="jump($event)">
+    </app-pagination>
+  </app-table-wrapper>
+</div>
+<div class="upload-bar"></div>

@@ -1,0 +1,26 @@
+.pagination-wrapper {
+    bottom: 0;
+    font-size: 12px;
+    height: 40px;
+    line-height: 24px;
+    overflow: hidden;
+    padding: 8px;
+    position: absolute;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}
+.pagination-item {
+    margin: 0 4px;
+}
+a.pagination-item {
+    cursor: pointer;
+}
+a.disabled {
+    color: grey;
+    cursor: default;
+}
+a.disabled:hover {
+    text-decoration: none;
+}

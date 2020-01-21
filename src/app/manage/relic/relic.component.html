@@ -1,59 +1,53 @@
 <div *ngIf="errText" id="failed-alert" class="relic-failed-alert alert alert-danger alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-            aria-hidden="true">&times;</span></button>
-    <h4>操作失败</h4>
-    <div>{{errText}}</div>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+      aria-hidden="true">&times;</span></button>
+  <h4>操作失败</h4>
+  <div>{{errText}}</div>
 </div>
 
-<div class="modal fade" id="deleting-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title text-danger">删除遗迹</h4>
-            </div>
-            <div class="modal-body">
-                <p>确定要删除该遗迹吗？</p>
-                <p>警告：该操作<strong>不可撤销</strong></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteRelic()">删除</button>
-            </div>
-        </div>
-    </div>
+<app-titlebar [title]="'遗迹点'" [count]="relicAmount" [searchBar]="true" (onSearch)="search($event)"></app-titlebar>
+<div class="table-container">
+  <app-table-wrapper>
+    <table class="qh-table">
+      <tr>
+        <th>序号</th>
+        <th>遗迹点编码</th>
+        <th>遗迹点名称</th>
+        <th>遗迹类型</th>
+        <th>经度</th>
+        <th>纬度</th>
+        <th>照片数</th>
+        <th>视频数</th>
+        <th>发布时间</th>
+        <th>发布人</th>
+        <th>发布状态</th>
+        <th>详情</th>
+        <th>删除</th>
+      </tr>
+      <tr *ngFor="let relic of relics; let i = index">
+        <td>{{itemCount * (page - 1) + i + 1}}</td>
+        <td>{{relic.code}}</td>
+        <td>{{relic.name}}</td>
+        <td>{{relic.relicType?.category}}</td>
+        <td>{{relic.location?.longitude | number}}</td>
+        <td>{{relic.location?.latitude | number}}</td>
+        <td>{{relic.pictures?.length ? relic.pictures.length : 0}}</td>
+        <td>{{relic.videos?.length ? relic.videos.length : 0}}</td>
+        <td>{{relic.recordTime | date:'y-MM-dd'}}</td>
+        <td>{{relic.recorder | idToName:'user' | async}}</td>
+        <td><button class="btn btn-{{relic.isFreezed ? 'default' : 'warning'}}"
+            (click)="freeze(relic)">{{relic.isFreezed ? '解冻' : '冻结'}}</button></td>
+        <td><button class="btn btn-primary" (click)="showDetail(relic)">详情</button></td>
+        <td><button class="btn btn-danger" (click)="deleteRelic(relic)">删除</button></td>
+      </tr>
+    </table>
+    <app-pagination [itemCount]="resultAmount" [pageCount]="pageCount" [current]="page" (onJump)="jump($event)"></app-pagination>
+  </app-table-wrapper>
+</div>
+<div class="upload-bar relic" (click)="uploadData()">
+  <span>遗迹点批量上传</span>
 </div>
 
-<div *ngFor="let relic of relics" class="relic-container">
-  <div class="relic-title">
-    <a routerLink="/manage/relic/{{relic.code}}" class="btn btn-link">
-      <h2>{{relic.name}}<small> [{{relic.code}}]</small></h2>
-    </a>
-    <button class="btn btn-danger right-float" data-toggle="modal" data-target="#deleting-modal" (click)="setDeletingRelic(relic)">删除</button>
-    <button class="btn right-float {{relic.isFreezed ? 'btn-light' : 'btn-warning'}}"  (click)="freeze(relic)">{{relic?.isFreezed ? '解冻' : '冻结'}}</button>
-    <a class="btn btn-primary right-float" routerLink="/manage/relic/{{relic.code}}">编辑</a>
-  </div>
-  <p>{{relic.description.slice(0, 200)}}......</p>
+<div class="detail-content">
+  
 </div>
-
-<nav aria-label="Page navigation" style="text-align: center;">
-  <ul class="pagination">
-    <li>
-      <button [disabled]="page <= 1 ? 'true' : undefined" (click)="loadRelics(page - 1)" class="btn btn-default"
-        aria-label="Previous">
-        <span aria-hidden="true">上一页</span>
-      </button>
-    </li>
-    <li *ngFor="let i of counter">
-      <button class="btn btn-default" (click)="loadRelics(i + 1)"
-        [disabled]="i == page-1 ? 'true' : undefined">{{i + 1}}</button>
-    </li>
-    <li>
-      <button [disabled]="page >= relics.length-1 ? 'true' : undefined" (click)="loadRelics(page + 1)"
-        class="btn btn-default" aria-label="Next">
-        <span aria-hidden="true">下一页</span>
-      </button>
-    </li>
-  </ul>
-</nav>

@@ -1,0 +1,8 @@
+<div class="pagination-wrapper">
+  <a class="pagination-item" (click)="jump(1)">首页</a>
+  <a class="pagination-item" (click)="jump(current - 1)" [class.disabled]="current <= 1">上一页</a>
+  <a class="pagination-item" (click)="jump(current + 1)" [class.disabled]="current >= pageCount">下一页</a>
+  <a class="pagination-item" (click)="jump(pageCount)">尾页</a>
+  <span class="pagination-item">页次：{{current}}/{{pageCount}}页</span>
+  <span class="pagination-item">共{{itemCount}}条</span>
+</div>
