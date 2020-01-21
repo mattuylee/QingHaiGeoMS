@@ -4,41 +4,64 @@ import { RelicResult, BaseResult } from 'src/app/entities/Result';
 import { Relic } from 'src/app/entities/Relic';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { ManageService } from 'src/app/shared/manage.service';
 
 @Component({
   selector: 'app-relic',
   templateUrl: './relic.component.html',
-  styleUrls: ['./relic.component.scss']
+  styleUrls: ['../manage.scss', './relic.component.scss']
 })
 export class RelicComponent implements OnInit {
-
   constructor(
     private route: ActivatedRoute,
-    private api: ApiService
+    private api: ApiService,
+    private manageService: ManageService
   ) { }
-    page: number
-    relics: Relic[] = []
-    counter: number[]
-    errText: string
-    deletingRelic: Relic = null
+  relicAmount = 0
+  resultAmount = 0
+  relics: Relic[] = []
+  page: number  //当前页
+  //搜索关键词
+  keyword: string
+  //错误文本
+  errText: string
+  //每页遗迹数量
+  readonly itemCount = this.manageService.itemCount
+  pageCount
 
   ngOnInit() {
-    this.page = Number(this.route.snapshot.paramMap.get('page'))
-    this.counter = this.api.makeCounterArray(this.api.getRelicCount() / 5)
-    if (!this.page)
-      this.page = 1
+    this.page = Number(this.route.snapshot.queryParamMap.get('page'))
+    if (!this.page) { this.page = 1 }
+    this.api.getStatisticData().toPromise().then(data => {
+      this.relicAmount = (data && data.relic) ? data.relic.number : 0
+      this.pageCount = Math.ceil(this.relicAmount / this.itemCount)
+    })
     this.loadRelics(this.page)
   }
 
   loadRelics(page: number) {
-    this.api.getRelics(page, 5).subscribe((res: RelicResult) => {
+    this.api.getRelics(page, this.itemCount > 0 ? this.itemCount : 1).subscribe((res: RelicResult) => {
       if (res.error) {
         this.errText = res.error
         return
       }
       this.page = page
-      if (!res.relics || res.relics.length == 0) return
+      if (!res.relics || res.relics.length == 0) { return }
       this.relics = res.relics
+      this.resultAmount = this.relicAmount
+    })
+  }
+  search(kw: string, page: number = 1) {
+    this.keyword = kw
+    this.api.searchRelics(kw, page, this.itemCount).toPromise().then(res => {
+      if (res.error) {
+        this.errText = res.error
+        return
+      }
+      this.page = page
+      this.relics = res.results
+      this.resultAmount = res.count
+      this.pageCount = Math.ceil(this.resultAmount / this.itemCount)
     })
   }
 
@@ -55,18 +78,29 @@ export class RelicComponent implements OnInit {
         relic.isFreezed = !relic.isFreezed
     })
   }
-  setDeletingRelic(relic: Relic) {
-    this.deletingRelic = relic
+  showDetail() {
+
   }
-  deleteRelic() {
-    if (!this.deletingRelic) return
-    let obs = this.api.deleteRelic(this.deletingRelic.code)
-    obs.subscribe((res: BaseResult) => {
+  deleteRelic(relic: Relic) {
+    if (!confirm(`删除遗迹点${relic.name}？注意，此操作不可撤销。`)) { return }
+    this.api.deleteRelic(relic.code).toPromise().then((res: BaseResult) => {
       if (res.error)
         this.errText = res.error
-      else
-        this.relics = this.relics.filter((i) => i.code != this.deletingRelic.code)
-      this.deletingRelic = null
+      else {
+        this.relics = this.relics.filter((i) => i.code != relic.code)
+        --this.relicAmount
+        --this.resultAmount
+      }
     })
+  }
+
+  //页面跳转
+  jump(index: number) {
+    if (this.keyword) {
+      this.search(this.keyword, index)
+    }
+    else {
+      this.loadRelics(index)
+    }
   }
 }

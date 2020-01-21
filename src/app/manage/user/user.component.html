@@ -1,4 +1,3 @@
-<app-header [selectedItem]="'user'"></app-header>
 <div *ngIf="errText" id="failed-alert" class="user-failed-alert alert alert-danger alert-dismissible" role="alert">
   <button type="button" class="close" aria-label="Close" (click)="hideFailedTip()"><span
       aria-hidden="true">&times;</span></button>
@@ -6,63 +5,42 @@
   <div>{{errText}}</div>
 </div>
 
-<div *ngFor="let user of users" class="user-container">
-  <div class="user-title">
-    <h4 style="display: inline;">{{user.userName}}</h4>
-    <button class="btn right-float {{user.isFreezed ? 'btn-light' : 'btn-warning'}}"
-      [class.disabled]="currentAdmin && user.id == currentAdmin.id"
-      (click)="freeze(user)">{{user?.isFreezed ? '解冻' : '冻结'}}</button>
-    <div class="dropdown right-float">
-      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown"
-        [class.disabled]="currentAdmin && user.id == currentAdmin.id" aria-haspopup="true" aria-expanded="true">
-        {{user.isSuperAdmin ? '超级管理员' : (user.isAdmin ? '管理员' : '普通用户')}}&nbsp;
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-        <li><a (click)="setAdministration(user, false)">普通用户</a></li>
-        <li><a (click)="setAdministration(user, true)">管理员</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-lg-6 col-md-8 col-sm-12">
-      <table class="table">
-        <tbody>
-          <tr>
-            <th>用户ID</th>
-            <th>{{user.id}}</th>
-          </tr>
-          <tr>
-            <th>昵称</th>
-            <th>{{user.nickName}}</th>
-          </tr>
-          <tr>
-            <th>真实姓名</th>
-            <th>{{user.realName}}</th>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+<app-titlebar [title]="'用户'" [count]="resultAmount" [searchBar]="true" (onSearch)="loadUsers(1, $event)"></app-titlebar>
+<div class="table-container">
+  <app-table-wrapper>
+    <table class="qh-table">
+      <tr>
+        <th>序号</th>
+        <th>账号</th>
+        <th>邮箱</th>
+        <th>昵称</th>
+        <th>姓名</th>
+        <th>电话</th>
+        <th>角色</th>
+        <th>状态</th>
+        <!-- <th>删除</th> -->
+      </tr>
+      <tr *ngFor="let user of users; let i = index">
+        <td>{{itemCount * (page - 1) + i + 1}}</td>
+        <td>{{user.userName}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.nickName}}</td>
+        <td>{{user.realName}}</td>
+        <td>{{user.phone}}</td>
+        <ng-container ></ng-container>
+        <td *ngIf="user.isSuperAdmin">超级管理员</td>
+        <td *ngIf="!user.isSuperAdmin">
+          <select name="user-role" [(ngModel)]="user.isAdmin" (change)="changeUserRole(user, $event)">
+            <option value="false">普通用户</option>
+            <option value="true">管理员</option>
+          </select>
+        </td>
+        <td><button class="btn btn-{{user.isFreezed ? 'default' : 'warning'}}"
+            (click)="freeze(user)">{{user.isFreezed ? '解冻' : '冻结'}}</button></td>
+        <!-- <td><button class="btn btn-danger" (click)="deleteUser(user)">删除</button></td> -->
+      </tr>
+    </table>
+    <app-pagination [itemCount]="resultAmount" [pageCount]="pageCount" [current]="page" (onJump)="jump($event)"></app-pagination>
+  </app-table-wrapper>
 </div>
-
-<nav aria-label="Page navigation" style="text-align: center;">
-  <ul class="pagination">
-    <li>
-      <button [disabled]="page <= 1 ? 'true' : undefined" (click)="loadUsers(page - 1)" class="btn btn-default"
-        aria-label="Previous">
-        <span aria-hidden="true">上一页</span>
-      </button>
-    </li>
-    <li *ngFor="let i of counter">
-      <button class="btn btn-default" (click)="loadUsers(i + 1)"
-        [disabled]="i == page-1 ? 'true' : undefined">{{i + 1}}</button>
-    </li>
-    <li>
-      <button [disabled]="page >= users.length-1 ? 'true' : undefined" (click)="loadUsers(page + 1)"
-        class="btn btn-default" aria-label="Next">
-        <span aria-hidden="true">下一页</span>
-      </button>
-    </li>
-  </ul>
-</nav>
+<div class="upload-bar"></div>
