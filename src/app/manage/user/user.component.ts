@@ -17,20 +17,21 @@ export class UserComponent implements OnInit {
     ) { }
   resultAmount = 0
   users: User[]
-  currentAdmin: User
+  currentAdminId: string
   page: number
   pageCount: number
+  keyword: string
   errText: string
   readonly itemCount = this.manageService.itemCount
 
   ngOnInit() {
-    this.currentAdmin = this.api.getCurrentAdmin()
+    this.currentAdminId = this.api.getCurrentAdmin()
     this.loadUsers(1)
   }
 
   loadUsers(page: number, keyword?: string) {
-    if (!keyword) { keyword = '' }
-    this.api.getUsers(page, 10, keyword).subscribe((res) => {
+    this.keyword = keyword ? keyword : ''
+    this.api.getUsers(page, 10, this.keyword).subscribe((res) => {
       if (res.error) {
         this.errText = res.error
         return
@@ -58,7 +59,7 @@ export class UserComponent implements OnInit {
   }
 
   freeze(user: User) {
-    if (this.currentAdmin && user.id == this.currentAdmin.id) { return }
+    if (user.id == this.currentAdminId) { return }
     let obs: Observable<BaseResult>
     if (user.isFreezed)
       obs = this.api.unfreezeUser(user.id)
@@ -75,5 +76,9 @@ export class UserComponent implements OnInit {
 
   hideFailedTip() {
     this.errText = null
+  }
+
+  jump(index: number) {
+    this.loadUsers(index, this.keyword)
   }
 }

@@ -5,7 +5,7 @@
   <div>{{errText}}</div>
 </div>
 
-<app-titlebar [title]="'遗迹点'" [count]="relicAmount" [searchBar]="true" (onSearch)="search($event)"></app-titlebar>
+<app-titlebar [title]="'遗迹点'" [count]="resultAmount" [searchBar]="true" (onSearch)="search($event)"></app-titlebar>
 <div class="table-container">
   <app-table-wrapper>
     <table class="qh-table">
@@ -37,7 +37,7 @@
         <td>{{relic.recorder | idToName:'user' | async}}</td>
         <td><button class="btn btn-{{relic.isFreezed ? 'default' : 'warning'}}"
             (click)="freeze(relic)">{{relic.isFreezed ? '解冻' : '冻结'}}</button></td>
-        <td><button class="btn btn-primary" (click)="showDetail(relic)">详情</button></td>
+        <td><button class="btn btn-primary" [routerLink]="['/relic', relic.code]">详情</button></td>
         <td><button class="btn btn-danger" (click)="deleteRelic(relic)">删除</button></td>
       </tr>
     </table>
@@ -46,8 +46,4 @@
 </div>
 <div class="upload-bar relic" (click)="uploadData()">
   <span>遗迹点批量上传</span>
-</div>
-
-<div class="detail-content">
-  
 </div>

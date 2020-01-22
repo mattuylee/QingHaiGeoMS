@@ -5,52 +5,16 @@
   </div>
   <div class="right">
     <img class="profile" src="assets/title-bar/user.png">
-    <span class="username">系统管理员</span>
+    <span class="username">{{adminId | idToName:'user' | async}}</span>
   </div>
 </header>
 
-<div class="content-wrapper">
-  <div class="left-board">
-    <router-outlet></router-outlet>
-  </div>
-  <div class="content">
-    <div class="navigation">
-      <div class="nav-item" routerLink="/manage/relic" routerLinkActive="active">
-        <img src="assets/navigation/relic.png" />
-        <span>遗迹点</span>
-      </div>
-      <div class="nav-item" routerLink="/manage/knowledge" routerLinkActive="active">
-        <img src="assets/navigation/knowledge.png" />
-        <span>地质科普</span>
-      </div>
-      <div class="nav-item" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <img src="assets/navigation/home.png" />
-        <span>首页</span>
-      </div>
-      <div class="nav-item" routerLink="/manage/moment" routerLinkActive="active">
-        <img src="assets/navigation/moment.png" />
-        <span>随手拍</span>
-      </div>
-      <div class="nav-item" routerLink="/manage/qa" routerLinkActive="active">
-        <img src="assets/navigation/qa.png" />
-        <span>互动问答</span>
-      </div>
-      <div class="nav-item" routerLink="/manage/user" routerLinkActive="active">
-        <img src="assets/navigation/user.png" />
-        <span>我的</span>
-      </div>
-    </div>
-    <div class="map">
-      <app-map></app-map>
-    </div>
-  </div>
-  <div class="right-board" *ngIf="shouldRightShow">
-    <app-statistic-right></app-statistic-right>
-  </div>
+<div class="wrapper">
+  <router-outlet></router-outlet>
 </div>
 
 <footer class="footer">
   <span>青海省地质调查院</span>&nbsp;
-  <a href="///www.qhsddy.cn">www.qhsddy.cn</a>&nbsp;
+  <span>www.qhsddy.cn</span>&nbsp;
   <span>V1.0 {{currentYear}} CDUT</span>
 </footer>

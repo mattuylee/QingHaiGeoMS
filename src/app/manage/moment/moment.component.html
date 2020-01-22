@@ -1,4 +1,4 @@
-<app-titlebar [title]="'随手拍'" [count]="resultAmount"></app-titlebar>
+<app-titlebar [title]="'随手拍'" [count]="resultAmount" [searchBar]="true" (onSearch)="loadMoments(1, $event)"></app-titlebar>
 <div class="table-container">
   <app-table-wrapper>
     <table class="qh-table">
@@ -15,8 +15,8 @@
         <td>{{moment.text}}</td>
         <td>{{moment.user?.userName}}</td>
         <td>{{moment.time | date:'y-MM-dd'}}</td>
-        <td><button class="btn btn-primary" (click)="showDetail(user)">查看</button></td>
-        <td><button class="btn btn-danger" (click)="deleteUser(user)">删除</button></td>
+        <td><button class="btn btn-primary" [routerLink]="['/moment', moment.code]">查看</button></td>
+        <td><button class="btn btn-danger" (click)="deleteMoment(moment)">删除</button></td>
       </tr>
     </table>
     <app-pagination [itemCount]="resultAmount" [pageCount]="pageCount" [current]="page" (onJump)="jump($event)"></app-pagination>

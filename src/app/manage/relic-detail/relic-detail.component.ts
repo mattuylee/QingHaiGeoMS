@@ -24,7 +24,7 @@ export class RelicDetailComponent implements OnInit {
   showSucceededAlert = false
   relicTypes: RelicType[]
   //修改的数据
-  boundData: any = {}
+  boundData: any
 
   ngOnInit() {
     let relicCode = this.route.snapshot.paramMap.get('code')
@@ -44,7 +44,7 @@ export class RelicDetailComponent implements OnInit {
       this.relic = res.relics[0]
       this.boundData = JSON.parse(JSON.stringify(this.relic))
       if(!this.boundData.location) {
-        this.boundData.location = {}
+        this.boundData.location = {} as any
       }
       if (!this.relic.pictures) this.relic.pictures = []
       if (!this.relic.videos) this.relic.videos = []
@@ -69,5 +69,9 @@ export class RelicDetailComponent implements OnInit {
 
   changeRelicType(t: RelicType) {
     this.changedRelicType = t
+  }
+
+  back() {
+    history.back()
   }
 }

@@ -67,4 +67,8 @@ export class KnowledgeDetailComponent implements OnInit {
       }, 1500)
     })
   }
+
+  back() {
+    history.back()
+  }
 }

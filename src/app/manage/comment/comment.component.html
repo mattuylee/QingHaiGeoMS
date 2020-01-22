@@ -1,40 +1,19 @@
 <div *ngIf="errText" id="failed-alert" class="relic-failed-alert alert alert-danger alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-            aria-hidden="true">&times;</span></button>
-    <h4>操作失败</h4>
-    <div>{{errText}}</div>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+      aria-hidden="true">&times;</span></button>
+  <h4>操作失败</h4>
+  <div>{{errText}}</div>
 </div>
 
 <div class="title-container">
-    <h1>{{title}}</h1>
+  <h1>{{title}}</h1>
+  <i class="back glyphicon glyphicon-arrow-left" (click)="back()" title="返回"></i>
 </div>
 
-
 <div *ngFor="let comment of comments" class="relic-container">
-    <div class="relic-title">
-      <h4 style="display: inline;">{{comment.user.nickName ? comment.user.nickName : comment.user.userName}}</h4>
-      <button class="btn btn-danger right-float" (click)="deleteComment(comment.code)">删除</button>
-    </div>
-    <p>{{comment.content}}</p>
+  <div class="relic-title">
+    <h4 style="display: inline;">{{comment.user.nickName ? comment.user.nickName : comment.user.userName}}</h4>
+    <button class="btn btn-danger right-float" (click)="deleteComment(comment.code)">删除</button>
   </div>
-  
-  <nav aria-label="Page navigation" style="text-align: center;">
-    <ul class="pagination">
-      <li>
-        <button [disabled]="page <= 1 ? 'true' : ''" (click)="loadComments(page - 1)" class="btn btn-default"
-          aria-label="Previous">
-          <span aria-hidden="true">上一页</span>
-        </button>
-      </li>
-      <li *ngFor="let i of counter">
-        <button class="btn btn-default" (click)="loadComments(i + 1)"
-          [disabled]="i == page-1 ? 'true' : undefined">{{i + 1}}</button>
-      </li>
-      <li>
-        <button [disabled]="page >= comments.length-1 ? 'true' : undefined" (click)="loadComments(page + 1)"
-          class="btn btn-default" aria-label="Next">
-          <span aria-hidden="true">下一页</span>
-        </button>
-      </li>
-    </ul>
-  </nav>
+  <p>{{comment.content}}</p>
+</div>

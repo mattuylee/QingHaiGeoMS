@@ -68,7 +68,7 @@ export class StatisticLeftComponent implements OnInit {
       this.relicData = data.relic
       this.momentData = data.moment
       if (!data.relic.classify) { return }
-      data.relic.classify.sort((a, b) => a.relicTypeCode - b.relicTypeCode)
+      data.relic.classify.sort((a, b) => +a.relicTypeCode - +b.relicTypeCode)
       data.relic.classify.forEach(i => {
         if (i.topRelicTypeCode) { return }
         (this.option.legend.data as any).push(i.relicTypeName)

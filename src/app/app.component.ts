@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from './api.service';
-import { Router, NavigationEnd } from '@angular/router';
+import { ManageService } from './shared/manage.service';
+
+declare const CefSharp
 
 @Component({
   selector: 'app-root',
@@ -9,18 +11,22 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   constructor (
-    private router: Router,
-    private api: ApiService
+    private api: ApiService,
+    private manageService: ManageService
   ) { }
 
+  adminId: string
   readonly currentYear = new Date().getFullYear()
-  shouldRightShow = true
-  ngOnInit() {
+
+  async ngOnInit() {
+    if (window['CefSharp']) {
+      await CefSharp.BindObjectAsync('NativeObj')
+    }
     this.api.init()
-    this.router.events.subscribe((ev: NavigationEnd) => {
-      if (!(ev instanceof NavigationEnd)) { return }
-      this.shouldRightShow = ev.urlAfterRedirects == '' || ev.urlAfterRedirects == '/'
-    })
+    this.adminId = this.api.getCurrentAdmin()
+  }
+  toggleFoldState() {
+    this.manageService.navigationFolded = !this.manageService.navigationFolded
   }
 }
 

@@ -42,6 +42,12 @@
         white-space: nowrap;
     }
 }
+.wrapper {
+    height: calc(100vh - 64px - 36px);
+    overflow: auto;
+    position: relative;
+    width: 100%;
+}
 .footer {
     text-align: center;
     line-height: 36px;
@@ -50,64 +56,4 @@
     position: absolute;
     height: 36px;
     width: 100%;
-}
-.content-wrapper {
-    background: url(../assets/background.png);
-    position: relative;
-    display: flex;
-    height: calc(100vh - 64px - 36px);
-    .left-board, .right-board {
-        width: 300px;
-        overflow: visible;
-        z-index: 1000;
-    }
-    .content {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        overflow: hidden;
-        position: relative;
-        .map {
-            position: relative;
-            flex-grow: 1;
-            margin: 8px;
-        }
-        .navigation {
-            display: flex;
-            justify-content: space-around;
-            max-width: 800px;
-            overflow: hidden;
-            padding: 16px;
-            position: absolute;
-            width: 100%;
-            z-index: 1000;
-        }
-        .nav-item {
-            align-items: center;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 1;
-            height: 96px;
-            justify-content: center;
-            width: 96px;
-            img {
-                width: 36px;
-                max-width: 100%;
-                height: auto;
-            }
-            span {
-                display: block;
-                text-align: center;
-            }
-        }
-        .nav-item:hover {
-            background: $color-back-active;
-        }
-        .nav-item.active {
-            background: $color-back-selected;
-            color: white;
-        }
-    }
 }

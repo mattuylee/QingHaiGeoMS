@@ -1,0 +1,8 @@
+<div class="titlebar">
+  <span>{{title}}</span>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <span class="big">{{count}}个</span>
+  <div class="search" *ngIf="searchBar">
+    <input type="text" [(ngModel)]="keyword" (keyup.enter)="search()" /><button type="button" (click)="search()">搜索</button>
+  </div>
+</div>

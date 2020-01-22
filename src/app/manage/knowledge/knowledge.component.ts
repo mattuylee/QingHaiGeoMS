@@ -6,49 +6,44 @@ import { BaseResult, KnowledgeResult } from 'src/app/entities/Result';
 import { Observable } from 'rxjs';
 import { ManageService } from 'src/app/shared/manage.service';
 
-declare let NativeObj
-
 @Component({
   selector: 'app-knowledge',
   templateUrl: './knowledge.component.html',
   styleUrls: ['../manage.scss', './knowledge.component.scss']
 })
 export class KnowledgeComponent implements OnInit {
-
   constructor(
     private route: ActivatedRoute,
     private api: ApiService,
     private manageService: ManageService
   ) { }
 
-  knowledgeAmount: number
+  resultAmount: number
   page: number
+  keyword: string
   knowledges: Knowledge[] = []
   errText: string
-  deletingKnowledge: Knowledge
 //每页数量
   readonly itemCount = this.manageService.itemCount
   pageCount
 
-  ngOnInit() {
+  async ngOnInit() {
     this.page = Number(this.route.snapshot.queryParamMap.get('page'))
     if (!this.page) { this.page = 1 }
-    this.api.getStatisticData().toPromise().then(data => {
-      this.knowledgeAmount = (data && data.knowledge) ? data.knowledge.number : 0
-      this.pageCount = Math.ceil(this.knowledgeAmount / this.itemCount)
-    })
-    this.loadKnowledges(this.page)
+    this.search('', this.page)
   }
 
-  loadKnowledges(page: number) {
-    this.api.getKnowledges(page, this.itemCount > 0 ? this.itemCount : 1).subscribe((res: KnowledgeResult) => {
+  search(kw: string, page: number = 1) {
+    this.keyword = kw ? kw : ''
+    this.api.searchKnowledges(this.keyword, page, this.itemCount).toPromise().then(res => {
       if (res.error) {
         this.errText = res.error
         return
       }
       this.page = page
-      if (!res.knowledges || res.knowledges.length == 0) return
-      this.knowledges = res.knowledges
+      this.knowledges = res.results
+      this.resultAmount = res.count
+      this.pageCount = Math.ceil(this.resultAmount / this.itemCount)
     })
   }
 
@@ -65,20 +60,25 @@ export class KnowledgeComponent implements OnInit {
         knowledge.isFreezed = !knowledge.isFreezed
     })
   }
-  deleteKnowledge(knowledge: Knowledge) {
-    if (!confirm(`删除地质科普${knowledge.name}？注意，此操作不可撤销。`)) { return }
-    let obs = this.api.deleteKnowledge(this.deletingKnowledge.code)
+  deleteKnowledge(index: number) {
+    if (!confirm(`删除地质科普${this.knowledges[index].name}？注意，此操作不可撤销。`)) { return }
+    let obs = this.api.deleteKnowledge(this.knowledges[index].code)
     obs.subscribe((res: BaseResult) => {
       if (res.error)
         this.errText = res.error
-      else
-        this.knowledges = this.knowledges.filter((i) => i.code != this.deletingKnowledge.code)
-      this.deletingKnowledge = null
+      else {
+        this.knowledges.splice(index, 1)
+        --this.resultAmount
+      }
     })
   }
   
   //页面跳转
   jump(index: number) {
-    this.loadKnowledges(index)
+    this.search(this.keyword, index)
+  }
+
+  uploadData() {
+    this.api.uploadKnowledges()
   }
 }

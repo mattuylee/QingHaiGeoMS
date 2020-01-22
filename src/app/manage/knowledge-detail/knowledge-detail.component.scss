@@ -3,8 +3,18 @@
     box-sizing: border-box;
 }
 .title-container {
-    width: 100%;
+    position: relative;
     text-align: center;
+    width: 100%;
+    .back {
+        cursor: pointer;
+        font-size: 24px;
+        left: 0;
+        line-height: 40px;
+        margin-left: 24px;
+        position: absolute;
+        top: 0;
+    }
 }
 .para {
     padding: 10px;

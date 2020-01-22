@@ -17,7 +17,6 @@ export class RelicComponent implements OnInit {
     private api: ApiService,
     private manageService: ManageService
   ) { }
-  relicAmount = 0
   resultAmount = 0
   relics: Relic[] = []
   page: number  //当前页
@@ -29,31 +28,15 @@ export class RelicComponent implements OnInit {
   readonly itemCount = this.manageService.itemCount
   pageCount
 
-  ngOnInit() {
+  async ngOnInit() {
     this.page = Number(this.route.snapshot.queryParamMap.get('page'))
     if (!this.page) { this.page = 1 }
-    this.api.getStatisticData().toPromise().then(data => {
-      this.relicAmount = (data && data.relic) ? data.relic.number : 0
-      this.pageCount = Math.ceil(this.relicAmount / this.itemCount)
-    })
-    this.loadRelics(this.page)
+    this.search('', this.page)
   }
 
-  loadRelics(page: number) {
-    this.api.getRelics(page, this.itemCount > 0 ? this.itemCount : 1).subscribe((res: RelicResult) => {
-      if (res.error) {
-        this.errText = res.error
-        return
-      }
-      this.page = page
-      if (!res.relics || res.relics.length == 0) { return }
-      this.relics = res.relics
-      this.resultAmount = this.relicAmount
-    })
-  }
   search(kw: string, page: number = 1) {
-    this.keyword = kw
-    this.api.searchRelics(kw, page, this.itemCount).toPromise().then(res => {
+    this.keyword = kw ? kw : ''
+    this.api.searchRelics(this.keyword, page, this.itemCount).toPromise().then(res => {
       if (res.error) {
         this.errText = res.error
         return
@@ -78,9 +61,6 @@ export class RelicComponent implements OnInit {
         relic.isFreezed = !relic.isFreezed
     })
   }
-  showDetail() {
-
-  }
   deleteRelic(relic: Relic) {
     if (!confirm(`删除遗迹点${relic.name}？注意，此操作不可撤销。`)) { return }
     this.api.deleteRelic(relic.code).toPromise().then((res: BaseResult) => {
@@ -88,7 +68,6 @@ export class RelicComponent implements OnInit {
         this.errText = res.error
       else {
         this.relics = this.relics.filter((i) => i.code != relic.code)
-        --this.relicAmount
         --this.resultAmount
       }
     })
@@ -96,11 +75,10 @@ export class RelicComponent implements OnInit {
 
   //页面跳转
   jump(index: number) {
-    if (this.keyword) {
-      this.search(this.keyword, index)
-    }
-    else {
-      this.loadRelics(index)
-    }
+    this.search(this.keyword, index)
+  }
+
+  uploadData() {
+    this.api.uploadRelics()
   }
 }
