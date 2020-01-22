@@ -24,7 +24,7 @@
         <th>详情</th>
         <th>删除</th>
       </tr>
-      <tr *ngFor="let relic of relics; let i = index">
+      <tr *ngFor="let relic of relics; let i = index" class="relic-item" [class.active]="focusIndex == i" (click)="focus(i)">
         <td>{{itemCount * (page - 1) + i + 1}}</td>
         <td>{{relic.code}}</td>
         <td>{{relic.name}}</td>

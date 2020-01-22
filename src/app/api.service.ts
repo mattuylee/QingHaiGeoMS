@@ -111,7 +111,6 @@ export class ApiService {
     }))
   }
   public getComments(targetCode: string, page: number, size: number) {
-    console.log(this.makeHeader())
     return this.handleError(this.http.get(BASE_URL + '/comments', {
       headers: this.makeHeader(),
       params: {

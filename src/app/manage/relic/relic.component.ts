@@ -26,7 +26,8 @@ export class RelicComponent implements OnInit {
   errText: string
   //每页遗迹数量
   readonly itemCount = this.manageService.itemCount
-  pageCount
+  pageCount = 0
+  focusIndex = -1 //当前选中
 
   async ngOnInit() {
     this.page = Number(this.route.snapshot.queryParamMap.get('page'))
@@ -76,6 +77,10 @@ export class RelicComponent implements OnInit {
   //页面跳转
   jump(index: number) {
     this.search(this.keyword, index)
+  }
+  focus(index: number) {
+    this.focusIndex = index
+    this.manageService.onRelicItemFocus.emit(this.relics[index])
   }
 
   uploadData() {
