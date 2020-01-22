@@ -5,6 +5,7 @@ import { ApiService } from '../api.service';
 import { RelicResult } from '../entities/Result';
 import { Relic } from '../entities/Relic';
 import { Router } from '@angular/router';
+import { ManageService } from '../shared/manage.service';
 declare let L;
 
 @Component({
@@ -15,18 +16,16 @@ declare let L;
 export class MapComponent implements OnInit {
 
   constructor(
+    private router: Router,
     private api: ApiService,
-    private router: Router
+    private manageService: ManageService
   ) { }
 
   private map
+  private popup
 
   ngOnInit() {
     var Gaode = L.tileLayer.chinaProvider('GaoDe.Normal.Map', {
-      maxZoom: 18,
-      minZoom: 5
-    });
-    var Gaodimgem = L.tileLayer.chinaProvider('TianDiTu.Satellite.Map', {
       maxZoom: 18,
       minZoom: 5
     });
@@ -43,13 +42,22 @@ export class MapComponent implements OnInit {
       zoomOutTitle: '缩小',
       position: 'bottomright'
     }).addTo(this.map);
-
+    this.popup = L.popup({ maxWidth: 600 })
+    this.manageService.onRelicItemFocus.subscribe((relic: Relic) => {
+      if (relic.location && relic.location.latitude && relic.location.longitude) {
+        this.map.flyTo(L.latLng(relic.location.latitude + 0.1, relic.location.longitude), 8, {
+          duration: 0.35
+        })
+        setTimeout(() => {
+          this.showPopup(relic)
+        }, 500)
+      }
+    })
     this.loadRelics(1)
   }
 
   //递归加载遗迹
   loadRelics(page: number) {
-    let popup = L.popup({ maxWidth: 600 })
     this.api.getRelics(page, 3).subscribe((res: RelicResult) => {
       if (res.error) {
         alert(res.error)
@@ -59,41 +67,40 @@ export class MapComponent implements OnInit {
         return
       res.relics.forEach((i: Relic) => {
         let marker = L.marker([i.location.latitude, i.location.longitude]).addTo(this.map);
-        marker.on('click', () => {
-          popup.setLatLng([i.location.latitude, i.location.longitude]).setContent(`
+        marker.on('click', () => this.showPopup(i))
+      })
+      this.loadRelics(page + 1)
+    })
+  }
+
+  showPopup(relic: Relic) {
+    this.popup.setLatLng([relic.location.latitude, relic.location.longitude]).setContent(`
           <div class="container-fluid">
             <div class="row-fluid">
             	<div class="span12">
             		<div class="hero-unit">
-            			<h1><a id="t-${i.code}">${i.name}</a></h1>
+            			<h1><a id="t-${relic.code}">${relic.name}</a></h1>
             			<p>
-            				<h5>${'　　' + (i.description.length > 144 ? i.description.slice(0, 144) + '......' : i.description)}<h5>
+            				<h5>${'　　' + (relic.description.length > 144 ? relic.description.slice(0, 144) + '......' : relic.description)}<h5>
             			</p>
-                   <a id="s-${i.code}" class="btn btn-default btn-large">查看详情</a>
+                   <a href="/relic/${relic.code}" class="btn btn-default btn-large">查看详情</a>
                    <br/>
                    <br/>
             		</div>
                  <table class="table">
                    <tbody>
-                   <tr><th><big>名称</big></th><th><big>${i.name}</big></th></tr>
-            				<tr><th><big>编号</big></th><th><big>${i.code}</big></th></tr>
-                     <tr><th><big>位置</big></th><th><big>${i.location.latitude.toFixed(3)}N,　${i.location.longitude.toFixed(3)}E</big></th></tr>
-            				<tr><th><big>遗迹类型</big></th><th><big>${i.relicType.category}</big></th></tr>
-                     <tr><th><big>类型代码</big></th><th><big>${i.relicType.code}</big></th></tr>
+                   <tr><th><big>名称</big></th><th><big>${relic.name}</big></th></tr>
+            				<tr><th><big>编号</big></th><th><big>${relic.code}</big></th></tr>
+                     <tr><th><big>位置</big></th><th><big>${relic.location.latitude.toFixed(3)}N,　${relic.location.longitude.toFixed(3)}E</big></th></tr>
+            				<tr><th><big>遗迹类型</big></th><th><big>${relic.relicType.category}</big></th></tr>
+                     <tr><th><big>类型代码</big></th><th><big>${relic.relicType.code}</big></th></tr>
                    </tbody>
             		</table>
             	</div>
             </div>
           </div>
           `).openOn(this.map)
-          let clickCallback = () => {
-            this.router.navigateByUrl('/relic/' + i.code)
-          }
-          document.getElementById('s-' + i.code).addEventListener('click', clickCallback)
-        })
-      })
-      this.loadRelics(page + 1)
-    })
+    this.manageService.navigationFolded = true
   }
 
   goto(url: string) {

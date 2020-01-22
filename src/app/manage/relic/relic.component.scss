@@ -1,0 +1,6 @@
+.relic-item {
+    cursor: default;
+}
+.relic-item.active, .relic-item:hover {
+    background: lightgrey;
+}
