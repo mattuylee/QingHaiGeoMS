@@ -85,7 +85,7 @@ export class MapComponent implements OnInit {
             			<p>
             				<h5>${'　　' + (relic.description.length > 144 ? relic.description.slice(0, 144) + '......' : relic.description)}<h5>
             			</p>
-                   <a href="/relic/${relic.code}" class="btn btn-default btn-large">查看详情</a>
+                   <a id="icon-to-relic-detail-${relic.code}" class="btn btn-default btn-large">查看详情</a>
                    <br/>
                    <br/>
             		</div>
@@ -103,6 +103,9 @@ export class MapComponent implements OnInit {
           </div>
           `).openOn(this.map)
     this.manageService.navigationFolded = true
+    document.getElementById('icon-to-relic-detail-' + relic.code).addEventListener('click', () => {
+      this.router.navigate(['/relic', relic.code])
+    })
   }
 
   goto(url: string) {

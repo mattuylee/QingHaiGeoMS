@@ -1,12 +1,47 @@
 import { Injectable, Optional, SkipSelf, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { Relic } from '../entities/Relic';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ManageService {
-  constructor() {
+  shouldRightShow = true
+  current: string = 'home' //当前路由
+
+  constructor(
+    private router: Router
+  ) {
+    this.router.events.subscribe((ev: NavigationEnd) => {
+      if (!(ev instanceof NavigationEnd)) { return }
+      if (ev.urlAfterRedirects == '/manage') {
+        this.shouldRightShow = true
+        this.tableFolded = true
+        this.navigationFolded = false
+        this.current = 'home'
+      }
+      else { this.shouldRightShow = false }
+      switch (ev.urlAfterRedirects) {
+        case '/manage/relic':
+          this.current = 'relic'
+          break
+        case '/manage/knowledge':
+          this.current = 'knowledge'
+          break
+        case '/manage/moment':
+          this.current = 'moment'
+          break
+        case '/manage/qa':
+          this.current = 'qa'
+          break
+        case '/manage/user':
+          this.current = 'user'
+          break
+        default:
+          this.current = 'home'
+          break
+      }
+    })
   }
   //上传按钮标题
   uploadType: 'relic' | 'knowledge'
