@@ -45,9 +45,11 @@ export class MapComponent implements OnInit {
     this.popup = L.popup({ maxWidth: 600 })
     this.manageService.onRelicItemFocus.subscribe((relic: Relic) => {
       if (relic.location && relic.location.latitude && relic.location.longitude) {
-        this.map.flyTo(L.latLng(relic.location.latitude + 0.1, relic.location.longitude), 8, {
+        this.map.panTo(L.latLng(relic.location.latitude, relic.location.longitude), {
           duration: 0.35
         })
+        const zoom = this.map.getZoom()
+        if (zoom != 8) { this.map.zoomIn(8 - zoom) }
         setTimeout(() => {
           this.showPopup(relic)
         }, 500)
