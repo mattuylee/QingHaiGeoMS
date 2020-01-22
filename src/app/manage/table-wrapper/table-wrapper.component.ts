@@ -8,7 +8,7 @@ import { ManageService } from 'src/app/shared/manage.service';
 })
 export class TableWrapperComponent implements OnInit {
   constructor(
-    private service: ManageService
+    public service: ManageService
   ) { }
 
   ngOnInit() {

@@ -79,7 +79,7 @@ export class StatisticRightComponent implements OnInit {
     this.option.series = []
     this.option.legend.data = []
     if (!data.knowledge.classify) { return }
-    data.knowledge.classify.sort((a, b) => a.relicTypeCode - b.relicTypeCode)
+    data.knowledge.classify.sort((a, b) => +a.relicTypeCode - +b.relicTypeCode)
     this.knowledgeData.classify.forEach((item, index) => {
       (this.option.legend.data as string[]).push(item.relicTypeName)
       this.option.series.push({

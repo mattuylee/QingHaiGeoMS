@@ -32,17 +32,15 @@ export class CommentComponent implements OnInit {
     this.targetType = TargetType[this.route.snapshot.queryParamMap.get('targetType')]
     this.title = this.route.snapshot.queryParamMap.get('title')
     this.code = this.route.snapshot.paramMap.get('code')
-    this.loadComments(1)
-    this.counter = this.api.makeCounterArray(NativeObj.GetCommentCount(this.code) / 6)
+    this.loadComments()
   }
 
-  loadComments(page: number) {
-    this.api.getComments(this.code, 6, page).subscribe((res: CommentResult) => {
+  loadComments() {
+    this.api.getComments(this.code, 1, 999).subscribe((res: CommentResult) => {
       if (res.error) {
         this.errText = res.error
         return
       }
-      this.page = page
       if (!res.comments || res.comments.length == 0) return
       this.comments = res.comments
     })
@@ -55,5 +53,9 @@ export class CommentComponent implements OnInit {
       }
       this.comments = this.comments.filter((i) => i.code != commentId)
     })
+  }
+
+  back() {
+    history.back()
   }
 }

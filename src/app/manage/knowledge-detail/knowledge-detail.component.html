@@ -1,49 +1,50 @@
 <div *ngIf="errText" id="failed-alert" class="alert alert-danger alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-            aria-hidden="true">&times;</span></button>
-    <h4>操作失败</h4>
-    <div>{{errText}}</div>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+      aria-hidden="true">&times;</span></button>
+  <h4>操作失败</h4>
+  <div>{{errText}}</div>
 </div>
 <div *ngIf="showSucceededAlert" id="failed-alert" class="alert alert-success alert-dismissible" role="alert">
-    <div>修改成功！</div>
+  <div>修改成功！</div>
 </div>
-
-<div class="title-container">
+  <div class="title-container">
     <h1>{{knowledge?.name}} <small>[{{knowledge?.code}}]</small></h1>
-</div>
-<div *ngIf="knowledge" class="para">
-  <h4>简介：</h4>
-  <p contenteditable="true" id="knowledge-description">{{knowledge?.description}}</p>
-  <button class="btn btn-primary" (click)="saveDescription()">保存</button>
-</div>
-<hr/>
-<div *ngIf="knowledge" class="para">
+    <i class="back glyphicon glyphicon-arrow-left" (click)="back()" title="返回"></i>
+  </div>
+  <div *ngIf="knowledge" class="para">
+    <h4>简介：</h4>
+    <p contenteditable="true" id="knowledge-description">{{knowledge?.description}}</p>
+    <button class="btn btn-primary" (click)="saveDescription()">保存</button>
+  </div>
+  <hr />
+  <div *ngIf="knowledge" class="para">
     <h4>特征：</h4>
-  <p contenteditable="true" id="knowledge-trait">{{knowledge?.trait}}</p>
-  <button class="btn btn-primary" (click)="saveTrait()">保存</button>
-</div>
+    <p contenteditable="true" id="knowledge-trait">{{knowledge?.trait}}</p>
+    <button class="btn btn-primary" (click)="saveTrait()">保存</button>
+  </div>
 
-<div class="row">
-<div class="col-sm-3 col-md-3 col-lg-3" *ngIf="knowledge">
-  <div class="thumbnail">
-      <img *ngIf="!knowledge?.pictures?.length" src="assets/no-preview.jpg"/>
-      <img *ngIf="knowledge?.pictures?.length" [src]="mediaUrl + knowledge?.pictures[0] + '?mode=low'" alt="暂无图片"/>
-      <div class="caption" style="text-align: center;">
-        <a class="btn btn-primary" role="button" [routerLink]="'/manage/media/' + knowledge.code" [queryParams]="{targetType: 'knowledge',mediaType: 'picture'}">管理图片</a>
+  <div class="row">
+    <div class="col-sm-3 col-md-3 col-lg-3" *ngIf="knowledge">
+      <div class="thumbnail">
+        <img *ngIf="!knowledge?.pictures?.length" src="assets/no-preview.jpg" />
+        <img *ngIf="knowledge?.pictures?.length" [src]="mediaUrl + knowledge?.pictures[0] + '?mode=low'" alt="暂无图片" />
+        <div class="caption" style="text-align: center;">
+          <a class="btn btn-primary" role="button" [routerLink]="'/media/' + knowledge.code"
+            [queryParams]="{targetType: 'knowledge',mediaType: 'picture'}">管理图片</a>
+        </div>
       </div>
-  </div>
-</div>
-<div class="col-sm-3 col-md-3 col-lg-3" *ngIf="knowledge">
-  <div class="thumbnail">
-      <img *ngIf="!knowledge?.videos[0]?.poster" src="assets/no-preview.jpg"/>
-      <img *ngIf="knowledge?.videos[0]?.poster" [src]="mediaUrl + knowledge?.videos[0]?.poster + '?mode=low'" alt="暂无预览">
-      <div class="caption" style="text-align: center;">
-          <a [routerLink]="'/manage/media/' + knowledge.code" class="btn btn-primary"
-              [queryParams]="{targetType: 'knowledge',mediaType: 'video'}"
-              role="button">管理视频</a>
+    </div>
+    <div class="col-sm-3 col-md-3 col-lg-3" *ngIf="knowledge">
+      <div class="thumbnail">
+        <img *ngIf="!knowledge?.videos[0]?.poster" src="assets/no-preview.jpg" />
+        <img *ngIf="knowledge?.videos[0]?.poster" [src]="mediaUrl + knowledge?.videos[0]?.poster + '?mode=low'"
+          alt="暂无预览">
+        <div class="caption" style="text-align: center;">
+          <a [routerLink]="'/media/' + knowledge.code" class="btn btn-primary"
+            [queryParams]="{targetType: 'knowledge',mediaType: 'video'}" role="button">管理视频</a>
+        </div>
       </div>
+    </div>
   </div>
-</div>
-</div>
-<a routerLink="/manage/comment/{{knowledge?.code}}" [queryParams]="{targetType: 'knowledge'}"
-class="btn btn-primary btn-block">评论管理</a>
+  <a routerLink="/comment/{{knowledge?.code}}" [queryParams]="{targetType: 'knowledge'}"
+    class="btn btn-primary btn-block">评论管理</a>

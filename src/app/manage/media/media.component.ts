@@ -247,4 +247,8 @@ export class MediaComponent implements OnInit {
       }
     })
   }
+
+  back() {
+    history.back()
+  }
 }

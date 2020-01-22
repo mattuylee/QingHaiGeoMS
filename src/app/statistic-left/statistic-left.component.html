@@ -1,16 +1,14 @@
 <div class="statistic-container">
   <div class="statistic-item">
-    <div class="titlebar titlebar-statistic">
-      <span>遗迹点</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="big">{{ relicData?.number }}个</span>
-    </div>
+    <app-titlebar [title]="'遗迹点'" [count]="relicData?.number"></app-titlebar>
     <div class="board">
       <ul *ngIf="relicData">
         <li class="{{ item.topRelicTypeCode ? '' : 'sub-' }}category" *ngFor="let item of relicData.classify">
           <span class="name" [title]="item.relicTypeName">{{ item.relicTypeName }}</span>
-          <div class="bar-container" title="{{item.relicTypeName}}，{{item.thisTypePercent * 100}}%">
+          <div class="bar-container" title="{{item.relicTypeName}}，{{(item.thisTypePercent * 100).toFixed(1)}}%">
             <span class="bar" [style.width]="item.thisTypePercent * 80 + 20 + '%'"></span>
           </div>
-          <span class="num">{{ item.number }}</span>
+          <span class="num">{{item.number}}</span>
         </li>
       </ul>
     </div>

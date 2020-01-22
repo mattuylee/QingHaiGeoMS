@@ -3,7 +3,17 @@ img {
     overflow: hidden;
 }
 .central-align-container {
+    position: relative;
     text-align: center;
+    .back {
+        cursor: pointer;
+        font-size: 24px;
+        left: 0;
+        line-height: 40px;
+        margin-left: 24px;
+        position: absolute;
+        top: 0;
+    }
 }
 
 .blank-block {

@@ -1,3 +1,43 @@
-<div class="list-container">
-    <router-outlet></router-outlet>
+<div class="content-wrapper">
+  <div class="left-board">
+    <div class="list-container">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+  <div class="content">
+    <img *ngIf="manageService.navigationFolded" src="assets/sidebar/expand_v.png" class="expander" title="展开"
+      (click)="toggleFoldState()" />
+    <div *ngIf="!manageService.navigationFolded" class="navigation">
+      <div class="nav-item" routerLink="/manage/relic" routerLinkActive="active">
+        <img src="assets/navigation/relic.png" />
+        <span>遗迹点</span>
+      </div>
+      <div class="nav-item" routerLink="/manage/knowledge" routerLinkActive="active">
+        <img src="assets/navigation/knowledge.png" />
+        <span>地质科普</span>
+      </div>
+      <div class="nav-item" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <img src="assets/navigation/home.png" />
+        <span>首页</span>
+      </div>
+      <div class="nav-item" routerLink="/manage/moment" routerLinkActive="active">
+        <img src="assets/navigation/moment.png" />
+        <span>随手拍</span>
+      </div>
+      <div class="nav-item" routerLink="/manage/qa" routerLinkActive="active">
+        <img src="assets/navigation/qa.png" />
+        <span>互动问答</span>
+      </div>
+      <div class="nav-item" routerLink="/manage/user" routerLinkActive="active">
+        <img src="assets/navigation/user.png" />
+        <span>用户</span>
+      </div>
+    </div>
+    <div class="map">
+      <app-map></app-map>
+    </div>
+  </div>
+  <div class="right-board" *ngIf="shouldRightShow">
+    <app-statistic-right></app-statistic-right>
+  </div>
 </div>

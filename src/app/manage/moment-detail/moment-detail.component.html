@@ -1,0 +1,12 @@
+<div><i class="back glyphicon glyphicon-arrow-left" (click)="back()" title="返回"></i></div>
+
+<div class="moment-text">
+  <p>
+    {{moment?.user?.userName}}:
+    <br/>
+    {{moment?.text}}
+  </p>
+  <p *ngFor="let pic of moment?.pictures">
+    <img [src]="mediaUrl + pic">
+  </p>
+</div>

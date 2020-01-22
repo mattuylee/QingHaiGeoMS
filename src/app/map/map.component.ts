@@ -87,9 +87,8 @@ export class MapComponent implements OnInit {
           </div>
           `).openOn(this.map)
           let clickCallback = () => {
-            this.router.navigateByUrl('/manage/relic/' + i.code)
+            this.router.navigateByUrl('/relic/' + i.code)
           }
-          document.getElementById('t-' + i.code).addEventListener('click', clickCallback)
           document.getElementById('s-' + i.code).addEventListener('click', clickCallback)
         })
       })
