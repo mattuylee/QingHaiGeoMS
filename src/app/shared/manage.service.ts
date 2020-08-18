@@ -28,6 +28,9 @@ export class ManageService {
         case '/manage/knowledge':
           this.current = 'knowledge'
           break
+        case '/manage/village':
+          this.current = 'village'
+          break
         case '/manage/moment':
           this.current = 'moment'
           break

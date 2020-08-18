@@ -6,6 +6,8 @@ export enum TargetType {
     'relic',
     /**地质科普 */
     'knowledge',
+    /**文化村 */
+    'village',
     /**随手拍 */
     'moment',
     /**回答 */

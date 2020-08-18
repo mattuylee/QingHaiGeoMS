@@ -33,6 +33,7 @@
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     color: white;
+    cursor: pointer;
     font-size: 20px;
     height: 40px;
     left: 8px;
@@ -43,11 +44,9 @@
     text-align: center;
     &.relic {
         background-image: url(../../assets/bg/relic.png);
-        cursor: pointer;
     }
     &.knowledge {
         background-image: url(../../assets/bg/knowledge.png);
-        cursor: pointer;
     }
     img {
         position: absolute;

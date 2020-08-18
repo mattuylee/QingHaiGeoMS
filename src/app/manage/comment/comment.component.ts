@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/api.service';
 import { ActivatedRoute } from '@angular/router';
-import { TargetType } from 'src/app/entities/enums';
 import { CommentResult } from 'src/app/entities/Result';
 import { Comment } from 'src/app/entities/comment';
-import { CommandName } from 'protractor';
 
 declare let NativeObj
 
@@ -22,14 +20,12 @@ export class CommentComponent implements OnInit {
 
   code: string
   title: string
-  targetType: TargetType
   comments: Comment[]
   counter: number[]
   page: number
   errText: string
 
   ngOnInit() {
-    this.targetType = TargetType[this.route.snapshot.queryParamMap.get('targetType')]
     this.title = this.route.snapshot.queryParamMap.get('title')
     this.code = this.route.snapshot.paramMap.get('code')
     this.loadComments()
@@ -46,7 +42,7 @@ export class CommentComponent implements OnInit {
     })
   }
   deleteComment(commentId: string) {
-    this.api.deleteComment(commentId).subscribe((res) => { 
+    this.api.deleteComment(commentId).subscribe((res) => {
       if (res.error) {
         this.errText = res.error
         return

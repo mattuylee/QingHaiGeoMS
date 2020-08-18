@@ -9,8 +9,8 @@ import { StatisticData } from './entities/statistic';
 
 let NativeObj
 
-// export let BASE_URL = 'http://localhost:8088'
-export let BASE_URL = 'http://47.108.76.144:8081'
+export let BASE_URL = 'http://localhost:8081'
+// export let BASE_URL = 'http://47.108.76.144:8081'
 @Injectable({
   providedIn: 'root'
 })
@@ -27,7 +27,7 @@ export class ApiService {
   /**@deprecated */
   public readonly baseRoute: string = ''
   /**
-   * 
+   *
    * @param id 是否包含管理员ID
    * @param form Content-Type是否为表单
    * @param json Content-Type是否为json
@@ -261,7 +261,7 @@ export class ApiService {
   public updateKnowledgeIntro(code: string, intro: string) {
     let url = BASE_URL + '/admin/knowledge/update/intro';
     let body = 'code=' + code + '&intro=' + encodeURIComponent(intro)
-    return this.handleError(this.http.put(url, body, { headers: this.makeHeader({ json: true }) }))
+    return this.handleError(this.http.put(url, body, { headers: this.makeHeader({ form: true }) }))
   }
 
   public updateKnowledgeTrait(code: string, trait: string) {
@@ -301,6 +301,39 @@ export class ApiService {
   public deleteKnowledge(code: string) {
     let url = BASE_URL + '/admin/knowledge/delete?code=' + code;
     return this.handleError(this.http.delete(url, { headers: this.makeHeader() }))
+  }
+  public freezeVillage(code: string) {
+    let url = BASE_URL + '/admin/village/freeze?code=' + code;
+    return this.handleError(this.http.put(url, null, { headers: this.makeHeader() }))
+  }
+  public unfreezeVillage(code: string) {
+    let url = BASE_URL + '/admin/village/unfreeze?code=' + code;
+    return this.handleError(this.http.put(url, null, { headers: this.makeHeader() }))
+  }
+  public deleteVillage(code: string) {
+    let url = BASE_URL + '/admin/village/delete?code=' + code;
+    return this.handleError(this.http.delete(url, { headers: this.makeHeader() }))
+  }
+  public updateVillageIntro(code: string, intro: string) {
+    let url = BASE_URL + '/admin/village/update/intro';
+    let body = 'code=' + code + '&intro=' + encodeURIComponent(intro)
+    return this.handleError(this.http.put(url, body, { headers: this.makeHeader({ form: true }) }))
+  }
+  public deleteVillagePicture(code: string, picId: string) {
+    let url = BASE_URL + '/admin/village/delete/picture?code=' + code + '&picId=' + picId;
+    return this.handleError(this.http.delete(url, { headers: this.makeHeader({ json: true }) }))
+  }
+  public reorderVillagePictures(code: string, order: number[]) {
+    let url = BASE_URL + '/admin/village/reorder/picture?code=' + code;
+    return this.handleError(this.http.put(url, order, { headers: this.makeHeader({ json: true }) }))
+  }
+  public reorderVillageVideoes(code: string, order: number[]) {
+    let url = BASE_URL + '/admin/village/reorder/video?code=' + code;
+    return this.handleError(this.http.put(url, order, { headers: this.makeHeader({ json: true }) }))
+  }
+  public deleteVillageVideo(code: string, videoId: string) {
+    let url = BASE_URL + '/admin/village/delete/video?code=' + code + '&videoId=' + videoId;
+    return this.handleError(this.http.delete(url, { headers: this.makeHeader({}) }))
   }
   public deleteComments(codes: string[]) {
     let url = BASE_URL + '/admin/comment/delete';
@@ -361,6 +394,25 @@ export class ApiService {
       xhr.send(form)
     })
   }
+  // 获取文化村数据
+  public getCultureVillages(code?: string, keyword?: string, page?: number, size?: number) {
+    const params = {
+      all: true,
+      code,
+      keyword,
+      page,
+      size
+    } as any
+    for (let key in params) {
+      if (!params[key]) {
+        delete params[key]
+      }
+    }
+    return this.handleError(this.http.get(BASE_URL + '/village', {
+      headers: this.makeHeader(),
+      params: params
+    }))
+  }
 
   public addRelicVideo(code: string) {
     NativeObj.AddRelicVideo(code)
@@ -368,12 +420,19 @@ export class ApiService {
   public addKnowledgeVideo(code: string) {
     NativeObj.AddKnowledgeVideo(code)
   }
+  public addVillageVideo(code: string) {
+    NativeObj.AddVillageVideo(code)
+  }
   public uploadRelics() {
     NativeObj.UploadRelics()
   }
   public uploadKnowledges() {
     NativeObj.UploadKnowledges()
   }
+  public uploadVillages() {
+    NativeObj.UploadVillages()
+  }
+
 
   public makeCounterArray(value: number): number[] {
     if (value <= 0) return []

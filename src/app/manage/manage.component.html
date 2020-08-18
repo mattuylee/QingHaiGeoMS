@@ -7,29 +7,33 @@
   <div class="content">
     <img *ngIf="manageService.navigationFolded" src="assets/sidebar/expand_v.png" class="expander" title="展开"
       (click)="toggleFoldState()" />
-    <div *ngIf="!manageService.navigationFolded" class="navigation">
-      <div class="nav-item" routerLink="/manage/relic" routerLinkActive="active">
-        <img src="assets/navigation/relic{{current == 'relic' ? '-focus' : ''}}.png" />
+    <div [style.display]="manageService.navigationFolded ? 'none' : 'inherit'"  class="navigation" #navigationPannel>
+      <div class="nav-item" data-id="village" routerLink="/manage/village" routerLinkActive="active">
+        <img src="assets/navigation/village{{current == 'village' || mouseOverItem == 'village' ? '-focus' : ''}}.png" />
+        <span>文化村</span>
+      </div>
+      <div class="nav-item" data-id="relic" routerLink="/manage/relic" routerLinkActive="active">
+        <img src="assets/navigation/relic{{current == 'relic'  || mouseOverItem == 'relic' ? '-focus' : ''}}.png" />
         <span>遗迹点</span>
       </div>
-      <div class="nav-item" routerLink="/manage/knowledge" routerLinkActive="active">
-        <img src="assets/navigation/knowledge{{current == 'knowledge' ? '-focus' : ''}}.png" />
+      <div class="nav-item" data-id="knowledge" routerLink="/manage/knowledge" routerLinkActive="active">
+        <img src="assets/navigation/knowledge{{current == 'knowledge'  || mouseOverItem == 'knowledge' ? '-focus' : ''}}.png" />
         <span>地质科普</span>
       </div>
-      <div class="nav-item" routerLink="/manage" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <img src="assets/navigation/home{{current == 'home' ? '-focus' : ''}}.png" />
+      <div class="nav-item" data-id="home" routerLink="/manage" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <img src="assets/navigation/home{{current == 'home' || mouseOverItem == 'home' ? '-focus' : ''}}.png" />
         <span>首页</span>
       </div>
-      <div class="nav-item" routerLink="/manage/moment" routerLinkActive="active">
-        <img src="assets/navigation/moment{{current == 'moment' ? '-focus' : ''}}.png" />
+      <div class="nav-item" data-id="moment" routerLink="/manage/moment" routerLinkActive="active">
+        <img src="assets/navigation/moment{{current == 'moment' || mouseOverItem == 'moment' ? '-focus' : ''}}.png" />
         <span>随手拍</span>
       </div>
-      <div class="nav-item" routerLink="/manage/qa" routerLinkActive="active">
-        <img src="assets/navigation/qa{{current == 'qa' ? '-focus' : ''}}.png" />
+      <div class="nav-item" data-id="qa" routerLink="/manage/qa" routerLinkActive="active">
+        <img src="assets/navigation/qa{{current == 'qa'  || mouseOverItem == 'qa' ? '-focus' : ''}}.png" />
         <span>互动问答</span>
       </div>
-      <div class="nav-item" routerLink="/manage/user" routerLinkActive="active">
-        <img src="assets/navigation/user{{current == 'user' ? '-focus' : ''}}.png" />
+      <div class="nav-item" data-id="user" routerLink="/manage/user" routerLinkActive="active">
+        <img src="assets/navigation/user{{current == 'user' || mouseOverItem == 'user' ? '-focus' : ''}}.png" />
         <span>用户</span>
       </div>
     </div>

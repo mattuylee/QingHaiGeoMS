@@ -46,3 +46,7 @@ export class MessageResult extends BaseResult{
 export class RelicTypesResult extends BaseResult{
     public relicTypes: RelicType[];
 }
+export class SearchResult<T> extends BaseResult {
+  public count: number
+  public results: T[]
+}

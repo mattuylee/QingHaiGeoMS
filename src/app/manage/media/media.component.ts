@@ -6,6 +6,7 @@ import { Knowledge } from 'src/app/entities/knowledge';
 import { RelicResult, BaseResult, KnowledgeResult } from 'src/app/entities/Result';
 import { Observable } from 'rxjs';
 import { TargetType } from 'src/app/entities/enums';
+import { CultureVillage } from 'src/app/entities/village';
 
 @Component({
   selector: 'app-media',
@@ -28,7 +29,7 @@ export class MediaComponent implements OnInit {
   //媒体路径
   media: string[] | VideoInfo[] = []
   //媒体所属对象
-  mediaOwner: Relic | Knowledge
+  mediaOwner: Relic | Knowledge | CultureVillage
   targetType: TargetType
   //是否允许调整顺序
   canChangeOrder: boolean = false
@@ -52,6 +53,9 @@ export class MediaComponent implements OnInit {
       obs = this.api.getRelics(0, 0, code)
     else if (this.targetType == TargetType.knowledge)
       obs = this.api.getKnowledges(0, 0, code)
+    else if (this.targetType == TargetType.village) {
+      obs = this.api.getCultureVillages(code)
+    }
     else {
       this.errText = '参数错误'
       return
@@ -65,14 +69,12 @@ export class MediaComponent implements OnInit {
         this.errText = res.error
         return
       }
-      if ((!res.relics || !res.relics.length) && (!res.knowledges || !res.knowledges.length)) {
+      const data = res['relics'] || res['knowledges'] || res['results']
+      if (!data || !data.length) {
         this.errText = '获取数据失败'
         return
       }
-      if (this.targetType == TargetType.relic)
-        this.mediaOwner = (res as RelicResult).relics[0]
-      else if (this.targetType == TargetType.knowledge)
-        this.mediaOwner = (res as KnowledgeResult).knowledges[0]
+      this.mediaOwner = data[0]
 
       if (this.mediaType == 'picture') {
         this.media = []
@@ -149,10 +151,14 @@ export class MediaComponent implements OnInit {
         obs = this.api.reorderRelicPictures(this.mediaOwner.code, this.orderArray)
       else if (this.mediaType == 'picture' && this.targetType == TargetType.knowledge)
         obs = this.api.reorderKnowledgePictures(this.mediaOwner.code, this.orderArray)
+      else if (this.mediaType == 'picture' && this.targetType == TargetType.village)
+        obs = this.api.reorderVillagePictures(this.mediaOwner.code, this.orderArray)
       else if (this.mediaType == 'video' && this.targetType == TargetType.relic)
         obs = this.api.reorderRelicVideoes(this.mediaOwner.code, this.orderArray)
       else if (this.mediaType == 'video' && this.targetType == TargetType.knowledge)
         obs = this.api.reorderKnowledgeVideoes(this.mediaOwner.code, this.orderArray)
+      else if (this.mediaType == 'video' && this.targetType == TargetType.village)
+        obs = this.api.reorderVillageVideoes(this.mediaOwner.code, this.orderArray)
       if (!obs) {
         this.errText = '无效参数'
         return
@@ -188,6 +194,8 @@ export class MediaComponent implements OnInit {
       obs = this.api.deleteRelicPicture(this.mediaOwner.code, pid)
     else if (this.targetType == TargetType.knowledge)
       obs = this.api.deleteKnowledgePicture(this.mediaOwner.code, pid)
+    else if (this.targetType == TargetType.village)
+      obs = this.api.deleteVillagePicture(this.mediaOwner.code, pid)
     obs.subscribe((res) => {
       if (res.error) {
         this.errText = res.error
@@ -206,6 +214,8 @@ export class MediaComponent implements OnInit {
       obs = this.api.deleteRelicVideo(this.mediaOwner.code, vid)
     else if (this.targetType == TargetType.knowledge)
       obs = this.api.deleteKnowledgeVideo(this.mediaOwner.code, vid)
+    else if (this.targetType == TargetType.village)
+      obs = this.api.deleteVillageVideo(this.mediaOwner.code, vid)
     obs.subscribe((res) => {
       if (res.error) {
         this.errText = res.error
@@ -224,8 +234,10 @@ export class MediaComponent implements OnInit {
     if (this.mediaType == 'picture') return
     if (this.targetType == TargetType.relic)
       this.api.addRelicVideo(this.mediaOwner.code)
-    else
+    else if (this.targetType == TargetType.knowledge)
       this.api.addKnowledgeVideo(this.mediaOwner.code)
+    else if (this.targetType == TargetType.village)
+      this.api.addVillageVideo(this.mediaOwner.code)
   }
 
   onPictureChanged(input: HTMLInputElement) {
@@ -240,6 +252,7 @@ export class MediaComponent implements OnInit {
       },
       complete: () => {
         this.uploading = false
+        location.reload();
       },
       error: (e) => {
         this.errText = e.message ? e.message : e

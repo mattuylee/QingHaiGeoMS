@@ -22,6 +22,8 @@ import { TableWrapperComponent } from './manage/table-wrapper/table-wrapper.comp
 import { MomentComponent } from './manage/moment/moment.component';
 import { QaComponent } from './manage/qa/qa.component';
 import { MomentDetailComponent } from './manage/moment-detail/moment-detail.component';
+import { CultureVillageComponent } from './manage/culture-village/village.component';
+import { CultureVillageDetailComponent } from './manage/culture-village-detail/village-detail.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { MomentDetailComponent } from './manage/moment-detail/moment-detail.comp
     CommentComponent,
     KnowledgeComponent,
     KnowledgeDetailComponent,
+    CultureVillageComponent,
+    CultureVillageDetailComponent,
     ListComponent,
     ManageComponent,
     MapComponent,
