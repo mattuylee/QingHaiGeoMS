@@ -43,8 +43,13 @@ export class RelicDetailComponent implements OnInit {
       }
       this.relic = res.relics[0]
       this.boundData = JSON.parse(JSON.stringify(this.relic))
-      if(!this.boundData.location) {
+      if (!this.boundData.location) {
         this.boundData.location = {} as any
+      }
+      for (let key in this.boundData.location) {
+        if (!isNaN(parseFloat(this.boundData.location[key]))) {
+          this.boundData.location[key] = +parseFloat(this.boundData.location[key]).toFixed(7);
+        }
       }
       if (!this.relic.pictures) this.relic.pictures = []
       if (!this.relic.videos) this.relic.videos = []
@@ -54,7 +59,7 @@ export class RelicDetailComponent implements OnInit {
 
   updateRelic() {
     this.boundData.relicTypeCode = this.changedRelicType.code
-    this.boundData.description = document.getElementById('relic-description').innerText
+    this.boundData.description = (document.getElementById('relic-description') as HTMLTextAreaElement).value
     this.api.updateRelic(this.boundData).subscribe((res: BaseResult) => {
       if (res.error) {
         this.errText = res.error

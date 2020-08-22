@@ -1,6 +1,7 @@
 import { Injectable, Optional, SkipSelf, EventEmitter } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Relic } from '../entities/Relic';
+import { CultureVillage } from '../entities/village';
 
 @Injectable({
   providedIn: 'root'
@@ -54,6 +55,8 @@ export class ManageService {
   tableFolded = true
   //遗迹项被选中
   onRelicItemFocus = new EventEmitter<Relic>()
+  //文化村被选中
+  onVillageItemFocus = new EventEmitter<CultureVillage>()
   //估计内容列表最大显示条目
   public get itemCount() {
     const v = Math.floor((document.documentElement.clientHeight - 282) / 40)

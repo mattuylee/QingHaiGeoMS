@@ -1,6 +1,6 @@
-.row {
-    width: 100%;
-    box-sizing: border-box;
+.village-detail {
+    overflow: auto;
+    height: 100%;
 }
 .title-container {
     position: relative;
@@ -16,17 +16,16 @@
         top: 0;
     }
 }
-.para {
-    padding: 10px;
+#village-description {
     width: 100%;
+    min-height: 120px;
+    max-height: 300px;
+    padding: 8px;
+    margin-bottom: 1em;
 }
-p {
-    text-indent: 2em;
+#village-latitude, #village-longitude, #village-altitude {
+    text-align: right;
 }
 img {
     height: 200px;
-}
-
-.no-preview {
-    background: url();
 }

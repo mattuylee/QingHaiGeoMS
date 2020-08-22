@@ -1,0 +1,6 @@
+.village-item {
+    cursor: default;
+}
+.village-item.active, .village-item:hover {
+    background: lightgrey;
+}

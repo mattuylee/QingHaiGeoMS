@@ -11,7 +11,7 @@
   <h1>{{boundData?.name}}</h1>
   <i class="back glyphicon glyphicon-arrow-left" (click)="back()" title="返回"></i>
 </div>
-<div *ngIf="relic" id="relic-description" contenteditable="true">{{relic?.description}}</div>
+<textarea *ngIf="relic" id="relic-description">{{relic?.description}}</textarea>
 <div *ngIf="boundData" class="row-fluid">
   <div class="col-sm-6 col-md-5 col-lg-6">
     <table class="table">
@@ -25,12 +25,17 @@
           <th><input id="relic-name" [(ngModel)]="boundData.name" /></th>
         </tr>
         <tr>
-          <th>位置</th>
+          <th>经度</th>
           <th>
-            <input type="number" id="relic-latitude" [(ngModel)]="boundData.location.latitude" step="0.001" />
-            °N,&nbsp;
-            <input type="number" id="relic-longitude" [(ngModel)]="boundData.location.longitude" step="0.001" />
+            <input type="number" id="relic-longitude" [(ngModel)]="boundData.location.longitude" step="0.0000001" />
             °E
+          </th>
+        </tr>
+        <tr>
+          <th>纬度</th>
+          <th>
+            <input type="number" id="relic-latitude" [(ngModel)]="boundData.location.latitude" step="0.0000001" />
+            °N
           </th>
         </tr>
         <tr>

@@ -26,7 +26,13 @@ p {
 img {
     height: 200px;
 }
-
+.knowledge-info-block {
+    width: 100%;
+    min-height: 120px;
+    max-height: 300px;
+    padding: 8px;
+    margin-bottom: 1em;
+}
 .no-preview {
     background: url();
 }

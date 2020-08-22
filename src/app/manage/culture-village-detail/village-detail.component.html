@@ -1,4 +1,4 @@
-<div *ngIf="errText" id="failed-alert" class="alert alert-danger alert-dismissible" role="alert">
+<div *ngIf="!village" id="failed-alert" class="alert alert-danger alert-dismissible" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
       aria-hidden="true">&times;</span></button>
   <h4>操作失败</h4>
@@ -7,38 +7,70 @@
 <div *ngIf="showSucceededAlert" id="failed-alert" class="alert alert-success alert-dismissible" role="alert">
   <div>修改成功！</div>
 </div>
-  <div class="title-container">
-    <h1>{{village?.name}}</h1>
-    <i class="back glyphicon glyphicon-arrow-left" (click)="back()" title="返回"></i>
+<div class="title-container">
+  <h1>{{boundData?.name}}</h1>
+  <i class="back glyphicon glyphicon-arrow-left" (click)="back()" title="返回"></i>
+</div>
+<textarea *ngIf="village" id="village-description">{{village?.description}}</textarea>
+<div *ngIf="boundData" class="row-fluid">
+  <div class="col-sm-6 col-md-5 col-lg-6">
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>编号</th>
+          <th>{{village?.code}}</th>
+        </tr>
+        <tr>
+          <th>名称</th>
+          <th><input id="village-name" [(ngModel)]="boundData.name" /></th>
+        </tr>
+        <tr>
+          <th>纬度</th>
+          <th>
+            <input type="number" id="village-longitude" [(ngModel)]="boundData.location.longitude" step="0.0000001" />
+            °E
+          </th>
+        </tr>
+        <tr>
+          <th>经度</th>
+          <th>
+            <input type="number" id="village-latitude" [(ngModel)]="boundData.location.latitude" step="0.0000001" />
+            °N
+          </th>
+        </tr>
+        <tr>
+          <th>高程</th>
+          <th>
+            <input type="number" id="village-altitude" [(ngModel)]="boundData.location.altitude" />
+            m
+          </th>
+        </tr>
+        <tr>
+          <a [routerLink]="'/comment/' + village.code" [queryParams]="{targetType: 'village', title: village.name}"
+            class="btn btn-primary btn-block">评论管理</a>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <div *ngIf="village" class="para">
-    <h4>简介：</h4>
-    <p contenteditable="true" id="village-description">{{village?.description}}</p>
-    <button class="btn btn-primary" (click)="saveDescription()">保存</button>
-  </div>
-  <hr />
-  <div class="row">
-    <div class="col-sm-3 col-md-3 col-lg-3" *ngIf="village">
-      <div class="thumbnail">
-        <img *ngIf="!village?.pictures?.length" src="assets/no-preview.jpg" />
-        <img *ngIf="village?.pictures?.length" [src]="mediaUrl + village?.pictures[0] + '?mode=low'" alt="暂无图片" />
-        <div class="caption" style="text-align: center;">
-          <a class="btn btn-primary" role="button" [routerLink]="'/media/' + village.code"
-            [queryParams]="{targetType: 'village',mediaType: 'picture'}">管理图片</a>
-        </div>
+  <div class="col-sm-3 col-md-3 col-lg-3" *ngIf="village">
+    <div class="thumbnail">
+      <img *ngIf="!village?.pictures?.length" src="assets/no-preview.jpg" />
+      <img *ngIf="village?.pictures?.length" [src]="mediaUrl + village?.pictures[0] + '?mode=low'" alt="暂无图片">
+      <div class="caption" style="text-align: center;">
+        <p><a [routerLink]="'/media/' + village.code" [queryParams]="{targetType: 'village',mediaType: 'picture'}"
+            class="btn btn-primary" role="button">管理图片</a></p>
       </div>
     </div>
-    <div class="col-sm-3 col-md-3 col-lg-3" *ngIf="village">
-      <div class="thumbnail">
-        <img *ngIf="!village?.videos[0]?.poster" src="assets/no-preview.jpg" />
-        <img *ngIf="village?.videos[0]?.poster" [src]="mediaUrl + village?.videos[0]?.poster + '?mode=low'"
-          alt="暂无预览">
-        <div class="caption" style="text-align: center;">
-          <a [routerLink]="'/media/' + village.code" class="btn btn-primary"
-            [queryParams]="{targetType: 'village',mediaType: 'video'}" role="button">管理视频</a>
-        </div>
+  </div>
+  <div class="col-sm-3 col-md-3 col-lg-3" *ngIf="village">
+    <div class="thumbnail">
+      <img *ngIf="!village?.videos[0]?.poster" src="assets/no-preview.jpg" />
+      <img *ngIf="village?.videos[0]?.poster" [src]="mediaUrl + village?.videos[0]?.poster + '?mode=low'" alt="暂无预览">
+      <div class="caption" style="text-align: center;">
+        <p><a [routerLink]="'/media/' + village.code" class="btn btn-primary"
+            [queryParams]="{targetType: 'village',mediaType: 'video'}" role="button">管理视频</a></p>
       </div>
     </div>
   </div>
-  <a routerLink="/comment/{{village?.code}}" [queryParams]="{targetType: 'village'}"
-    class="btn btn-primary btn-block">评论管理</a>
+</div>
+<button class="btn btn-primary btn-lg btn-block" (click)="updateVillage()">保存</button>

@@ -1,4 +1,5 @@
 import { VideoInfo } from './Relic'
+import { Location } from './location'
 
 export class CultureVillage {
   code: string    //文化村编号

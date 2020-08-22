@@ -13,13 +13,13 @@
   </div>
   <div *ngIf="knowledge" class="para">
     <h4>简介：</h4>
-    <p contenteditable="true" id="knowledge-description">{{knowledge?.description}}</p>
+    <textarea id="knowledge-description" class="knowledge-info-block">{{knowledge?.description}}</textarea>
     <button class="btn btn-primary" (click)="saveDescription()">保存</button>
   </div>
   <hr />
   <div *ngIf="knowledge" class="para">
     <h4>特征：</h4>
-    <p contenteditable="true" id="knowledge-trait">{{knowledge?.trait}}</p>
+    <textarea id="knowledge-trait" class="knowledge-info-block">{{knowledge?.trait}}</textarea>
     <button class="btn btn-primary" (click)="saveTrait()">保存</button>
   </div>
 

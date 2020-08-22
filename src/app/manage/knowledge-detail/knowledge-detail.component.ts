@@ -41,7 +41,7 @@ export class KnowledgeDetailComponent implements OnInit {
 
   saveDescription() {
     let obs = this.api.updateKnowledgeIntro(this.knowledge.code,
-      document.getElementById('knowledge-description').innerText)
+      (document.getElementById('knowledge-description') as HTMLTextAreaElement).value)
     obs.subscribe((res: BaseResult) => {
       if (this.errText) {
         this.errText = res.error
@@ -55,7 +55,7 @@ export class KnowledgeDetailComponent implements OnInit {
   }
   saveTrait() {
     let obs = this.api.updateKnowledgeTrait(this.knowledge.code,
-      document.getElementById('knowledge-description').innerText)
+      (document.getElementById('knowledge-trait') as HTMLTextAreaElement).value)
     obs.subscribe((res: BaseResult) => {
       if (res.error) {
         this.errText = res.error

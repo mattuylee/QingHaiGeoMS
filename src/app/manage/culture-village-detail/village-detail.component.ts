@@ -15,10 +15,13 @@ export class CultureVillageDetailComponent implements OnInit {
     private api: ApiService
   ) { }
 
-  village: CultureVillage
+
+  village: CultureVillage = {} as CultureVillage
   errText: string
   mediaUrl: string = BASE_URL + '/picture/'
   showSucceededAlert = false
+  //修改的数据
+  boundData: any
 
   ngOnInit() {
     let villageCode = this.route.snapshot.paramMap.get('code')
@@ -26,22 +29,30 @@ export class CultureVillageDetailComponent implements OnInit {
       this.village = null
       return
     }
-    this.api.getCultureVillages(villageCode).subscribe((res: SearchResult<CultureVillage>) => {
+    this.api.getCultureVillages(villageCode).toPromise().then((res: SearchResult<CultureVillage>) => {
       if (res.error || !res.results || !res.results.length) {
         this.village = null
         this.errText = res.error
         return
       }
       this.village = res.results[0]
+      this.boundData = JSON.parse(JSON.stringify(this.village))
+      if (!this.boundData.location) {
+        this.boundData.location = {} as any
+      }
+      for (let key in this.boundData.location) {
+        if (!isNaN(parseFloat(this.boundData.location[key]))) {
+          this.boundData.location[key] = +parseFloat(this.boundData.location[key]).toFixed(7);
+        }
+      }
       if (!this.village.pictures) this.village.pictures = []
       if (!this.village.videos) this.village.videos = []
     })
   }
 
-  saveDescription() {
-    let obs = this.api.updateVillageIntro(this.village.code,
-      document.getElementById('village-description').innerText)
-    obs.subscribe((res: BaseResult) => {
+  updateVillage() {
+    this.boundData.description = (document.getElementById('village-description') as HTMLTextAreaElement).value
+    this.api.updateVillage(this.boundData).subscribe((res: BaseResult) => {
       if (res.error) {
         this.errText = res.error
         return
@@ -49,7 +60,7 @@ export class CultureVillageDetailComponent implements OnInit {
       this.showSucceededAlert = true
       setTimeout(() => {
         this.showSucceededAlert = false
-      }, 1500)
+      }, 1500);
     })
   }
 

@@ -17,15 +17,17 @@ export class CultureVillageComponent implements OnInit {
     private api: ApiService,
     private manageService: ManageService
   ) { }
-
-  resultAmount: number
-  page: number
-  keyword: string
+  resultAmount = 0
   villages: CultureVillage[] = []
+  page: number  //当前页
+  //搜索关键词
+  keyword: string
+  //错误文本
   errText: string
   //每页数量
   readonly itemCount = this.manageService.itemCount
-  pageCount
+  pageCount = 0
+  focusIndex = -1 //当前选中
 
   async ngOnInit() {
     this.page = Number(this.route.snapshot.queryParamMap.get('page'))
@@ -34,7 +36,7 @@ export class CultureVillageComponent implements OnInit {
   }
 
   search(kw: string, page: number = 1) {
-    this.keyword = kw || ''
+    this.keyword = kw ? kw : ''
     this.api.getCultureVillages(null, this.keyword, page, this.itemCount).toPromise().then(res => {
       if (res.error) {
         this.errText = res.error
@@ -60,14 +62,13 @@ export class CultureVillageComponent implements OnInit {
         village.isFreezed = !village.isFreezed
     })
   }
-  deleteVillage(index: number) {
-    if (!confirm(`删除地质科普${this.villages[index].name}？注意，此操作不可撤销。`)) { return }
-    let obs = this.api.deleteVillage(this.villages[index].code)
-    obs.subscribe((res: BaseResult) => {
+  deleteVillage(village: CultureVillage) {
+    if (!confirm(`删除文化村${village.name}？注意，此操作不可撤销。`)) { return }
+    this.api.deleteVillage(village.code).toPromise().then((res: BaseResult) => {
       if (res.error)
         this.errText = res.error
       else {
-        this.villages.splice(index, 1)
+        this.villages = this.villages.filter((i) => i.code != village.code)
         --this.resultAmount
       }
     })
@@ -76,6 +77,10 @@ export class CultureVillageComponent implements OnInit {
   //页面跳转
   jump(index: number) {
     this.search(this.keyword, index)
+  }
+  focus(index: number) {
+    this.focusIndex = index
+    this.manageService.onVillageItemFocus.emit(this.villages[index])
   }
 
   uploadData() {

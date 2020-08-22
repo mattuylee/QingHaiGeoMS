@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Location } from './entities/location';
-import { BaseResult } from './entities/Result';
+import { BaseResult, SearchResult } from './entities/Result';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TargetType } from './entities/enums';
 import { StatisticData } from './entities/statistic';
+import { CultureVillage } from './entities/village';
 
 let NativeObj
 
@@ -235,6 +236,15 @@ export class ApiService {
     })
     return this.handleError(obs)
   }
+  public updateVillage(update: any) {
+    let obs = Observable.create((observer) => {
+      let res = new BaseResult()
+      res.error = NativeObj.UpdateVillage(JSON.stringify(update))
+      observer.next(res)
+      observer.complete()
+    })
+    return this.handleError(obs)
+  }
   public reorderRelicPictures(code: string, order: number[]) {
     let url = BASE_URL + '/admin/relic/reorder/picture?code=' + code;
     return this.handleError(this.http.put(url, order, { headers: this.makeHeader({ json: true }) }))
@@ -395,7 +405,7 @@ export class ApiService {
     })
   }
   // 获取文化村数据
-  public getCultureVillages(code?: string, keyword?: string, page?: number, size?: number) {
+  public getCultureVillages(code?: string, keyword?: string, page?: number, size?: number): Observable<SearchResult<CultureVillage>> {
     const params = {
       all: true,
       code,

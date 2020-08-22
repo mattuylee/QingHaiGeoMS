@@ -17,10 +17,11 @@
     }
 }
 #relic-description {
-    margin-bottom: 20px;
-    padding: 10px;
-    text-indent: 2em;
     width: 100%;
+    min-height: 120px;
+    max-height: 300px;
+    padding: 8px;
+    margin-bottom: 1em;
 }
 #relic-latitude, #relic-longitude, #relic-altitude {
     text-align: right;

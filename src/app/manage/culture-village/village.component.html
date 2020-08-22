@@ -1,18 +1,20 @@
 <div *ngIf="errText" id="failed-alert" class="village-failed-alert alert alert-danger alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-            aria-hidden="true">&times;</span></button>
-    <h4>操作失败</h4>
-    <div>{{errText}}</div>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+      aria-hidden="true">&times;</span></button>
+  <h4>操作失败</h4>
+  <div>{{errText}}</div>
 </div>
 
-<app-titlebar [title]="'文化村'" [count]="resultAmount" [searchBar]="true" (onSearch)="search($event, 1)"></app-titlebar>
+<app-titlebar [title]="'文化村'" [count]="resultAmount" [searchBar]="true" (onSearch)="search($event)"></app-titlebar>
 <div class="table-container">
   <app-table-wrapper>
     <table class="qh-table">
       <tr>
         <th>序号</th>
-        <th>文化村编号</th>
-        <th>名称</th>
+        <th>文化村编码</th>
+        <th>文化村名称</th>
+        <th>经度</th>
+        <th>纬度</th>
         <th>照片数</th>
         <th>视频数</th>
         <th>发布时间</th>
@@ -21,18 +23,20 @@
         <th>详情</th>
         <th>删除</th>
       </tr>
-      <tr *ngFor="let village of villages; let i = index">
+      <tr *ngFor="let village of villages; let i = index" class="village-item" [class.active]="focusIndex == i" (click)="focus(i)">
         <td>{{itemCount * (page - 1) + i + 1}}</td>
         <td>{{village.code}}</td>
         <td>{{village.name}}</td>
-        <td>{{village.pictures?.length || 0}}</td>
-        <td>{{village.videos?.length || 0}}</td>
+        <td>{{village.location?.longitude | number}}</td>
+        <td>{{village.location?.latitude | number}}</td>
+        <td>{{village.pictures?.length ? village.pictures.length : 0}}</td>
+        <td>{{village.videos?.length ? village.videos.length : 0}}</td>
         <td>{{village.recordTime | date:'y-MM-dd'}}</td>
         <td>{{village.recorder | idToName:'user' | async}}</td>
         <td><button class="btn btn-{{village.isFreezed ? 'default' : 'warning'}}"
             (click)="freeze(village)">{{village.isFreezed ? '解冻' : '冻结'}}</button></td>
         <td><button class="btn btn-primary" [routerLink]="['/village', village.code]">详情</button></td>
-        <td><button class="btn btn-danger" (click)="deleteVillage(i)">删除</button></td>
+        <td><button class="btn btn-danger" (click)="deleteVillage(village)">删除</button></td>
       </tr>
     </table>
     <app-pagination [itemCount]="resultAmount" [pageCount]="pageCount" [current]="page" (onJump)="jump($event)"></app-pagination>
