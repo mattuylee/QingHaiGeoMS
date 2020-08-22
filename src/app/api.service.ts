@@ -44,7 +44,7 @@ export class ApiService {
       this.user = { id: undefined } as any
     }
     let header: any = {}
-    if (option.id !== false)
+    if (option.id !== false && this.user.id)
       header = { ...header, ...{ "id": this.user.id } }
     if (option.form)
       header = { ...header, ...{ "Content-Type": 'application/x-www-form-urlencoded' } }
@@ -113,7 +113,7 @@ export class ApiService {
   }
   public getComments(targetCode: string, page: number, size: number) {
     return this.handleError(this.http.get(BASE_URL + '/comments', {
-      headers: this.makeHeader(),
+      headers: this.makeHeader({ id: false }),
       params: {
         target: targetCode,
         size: String(size),
@@ -140,7 +140,6 @@ export class ApiService {
     }))
   }
   public getUsers(page: number, size: number, keyword = '') {
-    this.makeHeader()
     return this.handleError(this.http.get(BASE_URL + '/user/ycxSearch', {
       headers: { adminID: this.user.id },
       params: { page: String(page), size: String(size), keyword: keyword }
@@ -419,7 +418,7 @@ export class ApiService {
       }
     }
     return this.handleError(this.http.get(BASE_URL + '/village', {
-      headers: this.makeHeader(),
+      headers: this.makeHeader({ id: false }),
       params: params
     }))
   }
