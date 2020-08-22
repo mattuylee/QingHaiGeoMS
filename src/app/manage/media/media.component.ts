@@ -3,7 +3,7 @@ import { ApiService, BASE_URL } from 'src/app/api.service';
 import { ActivatedRoute } from '@angular/router';
 import { Relic, VideoInfo } from 'src/app/entities/Relic';
 import { Knowledge } from 'src/app/entities/knowledge';
-import { RelicResult, BaseResult, KnowledgeResult } from 'src/app/entities/Result';
+import { BaseResult } from 'src/app/entities/Result';
 import { Observable } from 'rxjs';
 import { TargetType } from 'src/app/entities/enums';
 import { CultureVillage } from 'src/app/entities/village';
@@ -14,7 +14,6 @@ import { CultureVillage } from 'src/app/entities/village';
   styleUrls: ['./media.component.scss']
 })
 export class MediaComponent implements OnInit {
-
   constructor(
     private route: ActivatedRoute,
     private api: ApiService
@@ -30,6 +29,8 @@ export class MediaComponent implements OnInit {
   media: string[] | VideoInfo[] = []
   //媒体所属对象
   mediaOwner: Relic | Knowledge | CultureVillage
+  //宿主信息
+  targetCode: string
   targetType: TargetType
   //是否允许调整顺序
   canChangeOrder: boolean = false
@@ -47,23 +48,26 @@ export class MediaComponent implements OnInit {
   ngOnInit() {
     this.targetType = TargetType[this.route.snapshot.queryParamMap.get('targetType')]
     this.mediaType = this.route.snapshot.queryParamMap.get('mediaType') as ('picture' | 'video')
-    let code = this.route.snapshot.paramMap.get('code')
+    this.targetCode = this.route.snapshot.paramMap.get('code')
+    document.addEventListener('mouseup', () => {
+      this.draggingItemIndex = -1
+      this.splitIndex = this.orderArray.length
+    })
+    this.loadData();
+  }
+  loadData() {
     let obs: Observable<any>
     if (this.targetType == TargetType.relic)
-      obs = this.api.getRelics(0, 0, code)
+      obs = this.api.getRelics(0, 0, this.targetCode)
     else if (this.targetType == TargetType.knowledge)
-      obs = this.api.getKnowledges(0, 0, code)
+      obs = this.api.getKnowledges(0, 0, this.targetCode)
     else if (this.targetType == TargetType.village) {
-      obs = this.api.getCultureVillages(code)
+      obs = this.api.getCultureVillages(this.targetCode)
     }
     else {
       this.errText = '参数错误'
       return
     }
-    document.addEventListener('mouseup', () => {
-      this.draggingItemIndex = -1
-      this.splitIndex = this.orderArray.length
-    })
     obs.subscribe((res) => {
       if (res.error) {
         this.errText = res.error
@@ -252,7 +256,7 @@ export class MediaComponent implements OnInit {
       },
       complete: () => {
         this.uploading = false
-        location.reload();
+        this.loadData();
       },
       error: (e) => {
         this.errText = e.message ? e.message : e
