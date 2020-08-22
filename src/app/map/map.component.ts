@@ -82,7 +82,19 @@ export class MapComponent implements OnInit {
       if (!res.relics || !res.relics.length)
         return
       res.relics.forEach((i: Relic) => {
-        let marker = L.marker([i.location.latitude, i.location.longitude]).addTo(this.map);
+        let marker = L.marker([
+          i.location.latitude,
+          i.location.longitude
+        ], {
+          icon: L.icon({
+            iconUrl: 'assets/marker/marker-icon-2x.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 12],
+            shadowUrl: 'assets/marker/marker-shadow.png',
+            shadowSize: [41, 41],
+            shadowAnchor: [12, 12]
+          })
+        }).addTo(this.map);
         marker.on('click', () => this.showPopup(i))
       })
       this.loadRelics(page + 1)
@@ -97,9 +109,12 @@ export class MapComponent implements OnInit {
           village.location.longitude
         ], {
           icon: L.icon({
-            iconUrl: './assets/marker/marker-red.png',
-            iconSize: [48, 48]
-
+            iconUrl: 'assets/marker/marker-red.png',
+            iconSize: [48, 48],
+            iconAnchor: [12, 12],
+            shadowUrl: 'assets/marker/marker-shadow.png',
+            shadowSize: [41, 41],
+            shadowAnchor: [12, 12]
           }),
         }).addTo(this.map);
         marker.on('click', () => this.showVillagePopup(village))
