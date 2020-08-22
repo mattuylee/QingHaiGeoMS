@@ -89,7 +89,7 @@ export class StatisticRightComponent implements OnInit {
         center: [50 + 92 * index, '45%'],
         label: pieLabel,
         itemStyle: itemStyles[index % itemStyles.length],
-        data: [{ value: item.thisTypePercent * 100, name: String(item.number) }]
+        data: [{ value: Math.round(item.thisTypePercent * 10000) / 100, name: String(item.number) }]
       })
     })
     //下一轮事件循环绘制，等待容器元素宽度更新
