@@ -111,10 +111,10 @@ export class MapComponent implements OnInit {
           icon: L.icon({
             iconUrl: 'assets/marker/marker-red.png',
             iconSize: [48, 48],
-            iconAnchor: [12, 12],
+            iconAnchor: [25, 20],
             shadowUrl: 'assets/marker/marker-shadow.png',
             shadowSize: [41, 41],
-            shadowAnchor: [12, 12]
+            shadowAnchor: [14, 16]
           }),
         }).addTo(this.map);
         marker.on('click', () => this.showVillagePopup(village))
