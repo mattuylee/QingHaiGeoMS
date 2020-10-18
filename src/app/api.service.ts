@@ -10,8 +10,8 @@ import { CultureVillage } from './entities/village';
 
 let NativeObj
 
-// export let BASE_URL = 'http://localhost:8081'
-export let BASE_URL = 'http://47.108.76.144:8081'
+export let BASE_URL = 'http://localhost:8081'
+// export let BASE_URL = 'http://47.108.76.144:8081'
 @Injectable({
   providedIn: 'root'
 })
@@ -136,6 +136,12 @@ export class ApiService {
   public unfreezeUser(userId: string) {
     let body = 'userId=' + encodeURIComponent(userId)
     return this.handleError(this.http.put(BASE_URL + '/admin/user/unfreeze', body, {
+      headers: this.makeHeader({ id: true, form: true })
+    }))
+  }
+  public resetPassword(userId: string) {
+    const body = 'userId=' + encodeURIComponent(userId)
+    return this.handleError(this.http.put(BASE_URL + '/admin/user/reset/passwd', body, {
       headers: this.makeHeader({ id: true, form: true })
     }))
   }
@@ -452,7 +458,7 @@ export class ApiService {
   }
 
   private handleError(obs: Observable<any>): Observable<any> {
-    return Observable.create((observer) => {
+    return Observable.create(observer => {
       obs.subscribe({
         next: (res) => {
           observer.next(res)
@@ -464,6 +470,7 @@ export class ApiService {
           console.log('网络错误', e)
           result.error = '网络错误：\n' + e.message
           observer.next(result)
+          observer.complete()
         },
         complete: () => observer.complete()
       })

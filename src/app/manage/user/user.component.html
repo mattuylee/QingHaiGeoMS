@@ -18,7 +18,7 @@
         <th>电话</th>
         <th>角色</th>
         <th>状态</th>
-        <!-- <th>删除</th> -->
+        <th>密码重置</th>
       </tr>
       <tr *ngFor="let user of users; let i = index">
         <td>{{itemCount * (page - 1) + i + 1}}</td>
@@ -37,7 +37,7 @@
         </td>
         <td><button class="btn btn-{{user.isFreezed ? 'default' : 'warning'}}"
             (click)="freeze(user)">{{user.isFreezed ? '解冻' : '冻结'}}</button></td>
-        <!-- <td><button class="btn btn-danger" (click)="deleteUser(user)">删除</button></td> -->
+        <td><button class="btn btn-{{resetedFlagArr[i] ? 'default' : 'danger'}}" (click)="resetPassword(i)">{{resetedFlagArr[i] ? '已重置！' : '重置密码'}}</button></td>
       </tr>
     </table>
     <app-pagination [itemCount]="resultAmount" [pageCount]="pageCount" [current]="page" (onJump)="jump($event)"></app-pagination>

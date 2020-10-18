@@ -14,7 +14,7 @@ export class UserComponent implements OnInit {
   constructor(
     private api: ApiService,
     private manageService: ManageService
-    ) { }
+  ) { }
   resultAmount = 0
   users: User[]
   currentAdminId: string
@@ -23,6 +23,9 @@ export class UserComponent implements OnInit {
   keyword: string
   errText: string
   readonly itemCount = this.manageService.itemCount
+
+  //密码已重置的索引
+  resetedFlagArr = []
 
   ngOnInit() {
     this.currentAdminId = this.api.getCurrentAdmin()
@@ -39,6 +42,7 @@ export class UserComponent implements OnInit {
       this.page = page
       this.users = res.results
       this.resultAmount = res.count
+      this.resetedFlagArr = []
       this.pageCount = Math.ceil(this.resultAmount / this.itemCount)
     })
   }
@@ -65,13 +69,26 @@ export class UserComponent implements OnInit {
       obs = this.api.unfreezeUser(user.id)
     else
       obs = this.api.freezeUser(user.id)
-    obs.subscribe((res)=>{
+    obs.subscribe((res) => {
       if (res.error) {
         this.errText = res.error
         return
       }
       user.isFreezed = !user.isFreezed
     })
+  }
+  async resetPassword(i: number) {
+    if (this.resetedFlagArr[i]) {
+      this.resetedFlagArr[i] = null
+      return
+    }
+    const res = await this.api.resetPassword(this.users[i].id).toPromise()
+    if (res.error) {
+      this.errText = res.error
+    }
+    else {
+      this.resetedFlagArr[i] = true
+    }
   }
 
   hideFailedTip() {
