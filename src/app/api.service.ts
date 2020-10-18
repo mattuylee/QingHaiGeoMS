@@ -10,8 +10,8 @@ import { CultureVillage } from './entities/village';
 
 let NativeObj
 
-export let BASE_URL = 'http://localhost:8081'
-// export let BASE_URL = 'http://47.108.76.144:8081'
+// export let BASE_URL = 'http://localhost:8081'
+export let BASE_URL = 'http://47.108.76.144:8081'
 @Injectable({
   providedIn: 'root'
 })
